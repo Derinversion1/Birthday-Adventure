@@ -934,3 +934,63 @@
             createFlowers() {
                 const flowersContainer = this.flowers;
                 const colors = ['#FF69B4', '#FF1493', '#FFB6C1', '#FFA500', '#FF
+updateFlowers(count) {
+    const flowers = this.flowers.children;
+    for (let i = 0; i < Math.min(count, flowers.length); i++) {
+        flowers[i].style.opacity = '1';
+    }
+}
+
+createMushrooms() {
+    const container = this.mushrooms;
+    for (let i = 0; i < 10; i++) {
+        const m = document.createElement('div');
+        m.className = 'mushroom';
+        m.style.left = Math.random() * 100 + '%';
+        m.style.transform = `scale(${0.6 + Math.random() * 0.4})`;
+        container.appendChild(m);
+    }
+}
+
+updateMushrooms(count) {
+    const mushrooms = this.mushrooms.children;
+    for (let i = 0; i < Math.min(count, mushrooms.length); i++) {
+        mushrooms[i].style.opacity = '1';
+    }
+}
+
+nextStep() {
+    if (this.currentStep >= this.steps.length) return;
+
+    const step = this.steps[this.currentStep];
+
+    this.character.style.left = `${step.position}px`;
+    this.background.className = `background ${step.skyClass}`;
+
+    if (step.skyClass.includes('sunset')) {
+        this.sun.classList.add('setting');
+    } else if (step.skyClass === 'dusk') {
+        this.sun.classList.add('hidden');
+        this.moon.classList.add('visible');
+        this.stars.classList.add('visible');
+        this.lake.classList.add('visible');
+        this.animals.classList.add('visible');
+    } else if (step.skyClass === 'night-sky') {
+        this.moon.classList.add('visible');
+        this.stars.classList.add('visible');
+    }
+
+    this.updateForestDensity(step);
+    this.showBlurb(step.text);
+
+    if (step.final) {
+        this.nextButton.textContent = "Open Your Surprise";
+        this.nextButton.addEventListener('click', () => {
+            this.birthdayCard.classList.add('show');
+            this.nextButton.disabled = true;
+        }, { once: true });
+    }
+
+    this.currentStep++;
+}
+
