@@ -247,7 +247,7 @@
             position: absolute;
             bottom: 60px;
             width: 100%;
-            height: 200px; /* Reduced height */
+            height: 200px;
             overflow: hidden;
         }
 
@@ -265,7 +265,7 @@
         .tree::before {
             content: '';
             position: absolute;
-            bottom: -50px; /* Adjusted position */
+            bottom: -50px;
             left: -5px;
             width: 10px;
             height: 10px;
@@ -280,7 +280,7 @@
         }
 
         .tree.large::before {
-            bottom: -85px; /* Adjusted position */
+            bottom: -85px;
             left: -8px;
             width: 16px;
             height: 15px;
@@ -294,7 +294,7 @@
         }
 
         .tree.medium::before {
-            bottom: -65px; /* Adjusted position */
+            bottom: -65px;
             left: -6px;
             width: 12px;
             height: 12px;
@@ -400,7 +400,11 @@
             overflow: hidden;
         }
 
-        /* Simplified lake reflection */
+        .lake.visible {
+            opacity: 0.8;
+        }
+
+        /* Lake reflection */
         .lake::after {
             content: '';
             position: absolute;
@@ -445,6 +449,127 @@
                 transform: scale(1.1);
                 opacity: 0.5;
             }
+        }
+
+        /* Animal sprites */
+        .animals {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+        }
+
+        .animals.visible {
+            opacity: 1;
+        }
+
+        .cricket {
+            position: absolute;
+            bottom: 45px;
+            left: 30%;
+            width: 8px;
+            height: 6px;
+            background: #228B22;
+            border-radius: 3px;
+            opacity: 0;
+            animation: hop 2s infinite;
+        }
+
+        .cricket::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 1px;
+            width: 2px;
+            height: 4px;
+            background: #228B22;
+            border-radius: 1px;
+        }
+
+        .cricket::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            right: 1px;
+            width: 2px;
+            height: 4px;
+            background: #228B22;
+            border-radius: 1px;
+        }
+
+        .frog {
+            position: absolute;
+            bottom: 25px;
+            right: 25%;
+            width: 12px;
+            height: 8px;
+            background: #32CD32;
+            border-radius: 50%;
+            opacity: 0;
+            animation: bounce 3s infinite;
+        }
+
+        .frog::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 2px;
+            height: 2px;
+            background: #000;
+            border-radius: 50%;
+            box-shadow: 6px 0 0 #000;
+        }
+
+        .owl {
+            position: absolute;
+            bottom: 150px;
+            left: 15%;
+            width: 16px;
+            height: 20px;
+            background: #8B4513;
+            border-radius: 50% 50% 40% 40%;
+            opacity: 0;
+            animation: sway 4s infinite;
+        }
+
+        .owl::before {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 3px;
+            width: 3px;
+            height: 3px;
+            background: #FFD700;
+            border-radius: 50%;
+            box-shadow: 7px 0 0 #FFD700;
+        }
+
+        .owl::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 6px;
+            width: 4px;
+            height: 2px;
+            background: #FFA500;
+            border-radius: 0 0 50% 50%;
+        }
+
+        @keyframes hop {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1) translateY(-2px); }
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
         }
 
         .ui {
@@ -557,6 +682,11 @@
         <div class="lake" id="lake">
             <div class="lake-reflection"></div>
         </div>
+        <div class="animals" id="animals">
+            <div class="cricket"></div>
+            <div class="frog"></div>
+            <div class="owl"></div>
+        </div>
         <div class="trail"></div>
         <div class="character" id="character">
             <div class="head"></div>
@@ -594,6 +724,7 @@
                 this.moon = document.getElementById('moon');
                 this.stars = document.getElementById('stars');
                 this.lake = document.getElementById('lake');
+                this.animals = document.getElementById('animals');
                 this.birthdayCard = document.getElementById('birthdayCard');
                 this.bushes = document.getElementById('bushes');
                 this.flowers = document.getElementById('flowers');
@@ -601,6 +732,7 @@
                 this.soundIndicator = document.getElementById('soundIndicator');
                 this.audioContext = null;
                 this.audioAllowed = false;
+                this.ambientGain = null;
                 
                 this.steps = [
                     {
@@ -690,11 +822,52 @@
                 this.nextButton.addEventListener('click', () => {
                     if (!this.audioContext) {
                         this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        this.startAmbientSound();
                     }
                     this.nextStep();
                 });
                 
                 this.showBlurb(this.steps[0].text);
+            }
+            
+            startAmbientSound() {
+                if (!this.audioContext) return;
+                
+                // Create ambient forest sound
+                const bufferSize = this.audioContext.sampleRate * 4;
+                const buffer = this.audioContext.createBuffer(1, bufferSize, this.audioContext.sampleRate);
+                const data = buffer.getChannelData(0);
+                
+                // Generate soft pink noise for forest ambience
+                let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+                for (let i = 0; i < bufferSize; i++) {
+                    const white = Math.random() * 2 - 1;
+                    b0 = 0.99886 * b0 + white * 0.0555179;
+                    b1 = 0.99332 * b1 + white * 0.0750759;
+                    b2 = 0.96900 * b2 + white * 0.1538520;
+                    b3 = 0.86650 * b3 + white * 0.3104856;
+                    b4 = 0.55000 * b4 + white * 0.5329522;
+                    b5 = -0.7616 * b5 - white * 0.0168980;
+                    data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.05;
+                    b6 = white * 0.115926;
+                }
+                
+                const source = this.audioContext.createBufferSource();
+                source.buffer = buffer;
+                source.loop = true;
+                
+                const filter = this.audioContext.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(300, this.audioContext.currentTime);
+                
+                this.ambientGain = this.audioContext.createGain();
+                this.ambientGain.gain.setValueAtTime(0.02, this.audioContext.currentTime);
+                
+                source.connect(filter);
+                filter.connect(this.ambientGain);
+                this.ambientGain.connect(this.audioContext.destination);
+                
+                source.start();
             }
             
             createInitialTrees() {
@@ -760,295 +933,4 @@
             
             createFlowers() {
                 const flowersContainer = this.flowers;
-                const colors = ['#FF69B4', '#FF1493', '#FFB6C1', '#FFA500', '#FFFF00', '#9370DB'];
-                for (let i = 0; i < 12; i++) {
-                    const flower = document.createElement('div');
-                    flower.className = 'flower';
-                    flower.style.left = Math.random() * 100 + '%';
-                    flower.style.background = colors[Math.floor(Math.random() * colors.length)];
-                    flower.style.transform = `scale(${0.8 + Math.random() * 0.4})`;
-                    flowersContainer.appendChild(flower);
-                }
-            }
-            
-            updateFlowers(count) {
-                const flowers = this.flowers.children;
-                for (let i = 0; i < Math.min(count, flowers.length); i++) {
-                    flowers[i].style.opacity = '1';
-                }
-            }
-            
-            createMushrooms() {
-                const mushroomsContainer = this.mushrooms;
-                for (let i = 0; i < 8; i++) {
-                    const mushroom = document.createElement('div');
-                    mushroom.className = 'mushroom';
-                    mushroom.style.left = Math.random() * 100 + '%';
-                    mushroom.style.transform = `scale(${0.6 + Math.random() * 0.5})`;
-                    mushroomsContainer.appendChild(mushroom);
-                }
-            }
-            
-            updateMushrooms(count) {
-                const mushrooms = this.mushrooms.children;
-                for (let i = 0; i < Math.min(count, mushrooms.length); i++) {
-                    mushrooms[i].style.opacity = '1';
-                }
-            }
-            
-            createStars() {
-                const starsContainer = document.getElementById('stars');
-                for (let i = 0; i < 50; i++) {
-                    const star = document.createElement('div');
-                    star.className = 'star';
-                    star.style.left = Math.random() * 100 + '%';
-                    star.style.top = Math.random() * 60 + '%';
-                    star.style.animationDelay = Math.random() * 2 + 's';
-                    starsContainer.appendChild(star);
-                }
-            }
-            
-            nextStep() {
-                if (this.currentStep >= this.steps.length) return;
-                
-                this.nextButton.disabled = true;
-                
-                const step = this.steps[this.currentStep];
-                
-                // Update sky and sun
-                if (step.skyClass) {
-                    this.background.classList.add(step.skyClass);
-                    if (step.skyClass.includes('sunset')) {
-                        this.sun.classList.add('setting');
-                    } else if (step.skyClass === 'dusk' || step.skyClass === 'night-sky') {
-                        this.sun.classList.add('hidden');
-                    }
-                }
-                
-                // Move character
-                this.character.style.left = step.position + 'px';
-                
-                // Update forest density
-                this.updateForestDensity(step);
-                
-                // Play sound
-                this.playSound(step.sound);
-                
-                // Show blurb after movement
-                setTimeout(() => {
-                    this.showBlurb(step.text);
-                }, 500);
-                
-                // Check if this is the final step
-                if (step.final) {
-                    setTimeout(() => {
-                        this.showNightScene();
-                    }, 1000);
-                    
-                    setTimeout(() => {
-                        this.showBirthdayCard();
-                    }, 3000);
-                }
-                
-                // Re-enable button for next step
-                setTimeout(() => {
-                    this.nextButton.disabled = false;
-                    this.currentStep++;
-                }, 2000);
-            }
-            
-            showBlurb(text) {
-                this.blurb.classList.remove('show');
-                setTimeout(() => {
-                    this.blurb.textContent = text;
-                    this.blurb.classList.add('show');
-                }, 200);
-            }
-            
-            showNightScene() {
-                this.background.classList.add('night-sky');
-                this.stars.classList.add('visible');
-                this.moon.classList.add('visible');
-                this.lake.classList.add('visible');
-            }
-            
-            showBirthdayCard() {
-                this.birthdayCard.classList.add('show');
-            }
-            
-            showSoundIndicator() {
-                this.soundIndicator.classList.add('show');
-                setTimeout(() => {
-                    this.soundIndicator.classList.remove('show');
-                }, 2000);
-            }
-            
-            async playSound(type) {
-                try {
-                    // Show sound indicator
-                    this.showSoundIndicator();
-                    
-                    // Resume context if suspended
-                    if (this.audioContext && this.audioContext.state === 'suspended') {
-                        await this.audioContext.resume();
-                    }
-                    
-                    if (!this.audioContext) {
-                        console.log('Audio context not initialized');
-                        return;
-                    }
-                    
-                    switch(type) {
-                        case 'tree':
-                            this.playTreeSound();
-                            break;
-                        case 'cricket':
-                            this.playCricketSound();
-                            break;
-                        case 'frog':
-                            this.playFrogSound();
-                            break;
-                        case 'wind':
-                            this.playWindSound();
-                            break;
-                        case 'lake':
-                            this.playLakeSound();
-                            break;
-                    }
-                } catch (error) {
-                    console.log('Audio could not be played:', error);
-                }
-            }
-            
-            playTreeSound() {
-                const ctx = this.audioContext;
-                const oscillator = ctx.createOscillator();
-                const gainNode = ctx.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(ctx.destination);
-                
-                oscillator.frequency.setValueAtTime(200, ctx.currentTime);
-                oscillator.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 1);
-                
-                gainNode.gain.setValueAtTime(0, ctx.currentTime);
-                gainNode.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 0.1);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1);
-                
-                oscillator.type = 'sawtooth';
-                oscillator.start(ctx.currentTime);
-                oscillator.stop(ctx.currentTime + 1);
-            }
-            
-            playCricketSound() {
-                const ctx = this.audioContext;
-                for (let i = 0; i < 3; i++) {
-                    setTimeout(() => {
-                        const oscillator = ctx.createOscillator();
-                        const gainNode = ctx.createGain();
-                        
-                        oscillator.connect(gainNode);
-                        gainNode.connect(ctx.destination);
-                        
-                        oscillator.frequency.setValueAtTime(3000 + Math.random() * 1000, ctx.currentTime);
-                        oscillator.type = 'square';
-                        
-                        gainNode.gain.setValueAtTime(0, ctx.currentTime);
-                        gainNode.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 0.01);
-                        gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
-                        
-                        oscillator.start(ctx.currentTime);
-                        oscillator.stop(ctx.currentTime + 0.1);
-                    }, i * 200);
-                }
-            }
-            
-            playFrogSound() {
-                const ctx = this.audioContext;
-                const oscillator = ctx.createOscillator();
-                const gainNode = ctx.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(ctx.destination);
-                
-                oscillator.frequency.setValueAtTime(100, ctx.currentTime);
-                oscillator.frequency.linearRampToValueAtTime(80, ctx.currentTime + 0.2);
-                oscillator.frequency.linearRampToValueAtTime(100, ctx.currentTime + 0.4);
-                
-                gainNode.gain.setValueAtTime(0, ctx.currentTime);
-                gainNode.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.05);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
-                
-                oscillator.type = 'sine';
-                oscillator.start(ctx.currentTime);
-                oscillator.stop(ctx.currentTime + 0.4);
-            }
-            
-            playWindSound() {
-                const ctx = this.audioContext;
-                const bufferSize = ctx.sampleRate * 2;
-                const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-                const data = buffer.getChannelData(0);
-                
-                for (let i = 0; i < bufferSize; i++) {
-                    data[i] = (Math.random() * 2 - 1) * 0.1;
-                }
-                
-                const source = ctx.createBufferSource();
-                const filter = ctx.createBiquadFilter();
-                const gainNode = ctx.createGain();
-                
-                source.buffer = buffer;
-                filter.type = 'lowpass';
-                filter.frequency.setValueAtTime(500, ctx.currentTime);
-                
-                source.connect(filter);
-                filter.connect(gainNode);
-                gainNode.connect(ctx.destination);
-                
-                gainNode.gain.setValueAtTime(0, ctx.currentTime);
-                gainNode.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.5);
-                gainNode.gain.linearRampToValueAtTime(0, ctx.currentTime + 2);
-                
-                source.start(ctx.currentTime);
-                source.stop(ctx.currentTime + 2);
-            }
-            
-            playLakeSound() {
-                const ctx = this.audioContext;
-                const oscillator1 = ctx.createOscillator();
-                const oscillator2 = ctx.createOscillator();
-                const gainNode = ctx.createGain();
-                
-                oscillator1.connect(gainNode);
-                oscillator2.connect(gainNode);
-                gainNode.connect(ctx.destination);
-                
-                oscillator1.frequency.setValueAtTime(220, ctx.currentTime);
-                oscillator1.frequency.linearRampToValueAtTime(200, ctx.currentTime + 2);
-                
-                oscillator2.frequency.setValueAtTime(110, ctx.currentTime);
-                oscillator2.frequency.linearRampToValueAtTime(100, ctx.currentTime + 2);
-                
-                gainNode.gain.setValueAtTime(0, ctx.currentTime);
-                gainNode.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 0.2);
-                gainNode.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 1.8);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 2);
-                
-                oscillator1.type = 'sine';
-                oscillator2.type = 'sine';
-                
-                oscillator1.start(ctx.currentTime);
-                oscillator2.start(ctx.currentTime);
-                oscillator1.stop(ctx.currentTime + 2);
-                oscillator2.stop(ctx.currentTime + 2);
-            }
-        }
-        
-        // Start the game when page loads
-        window.addEventListener('load', () => {
-            new PixelHike();
-        });
-    </script>
-</body>
-</html>
+                const colors = ['#FF69B4', '#FF1493', '#FFB6C1', '#FFA500', '#FF
