@@ -245,9 +245,9 @@
 
         .trees {
             position: absolute;
-            bottom: 60px; 
+            bottom: 60px;
             width: 100%;
-            height: 300px;
+            height: 200px; /* Reduced height */
             overflow: hidden;
         }
 
@@ -258,14 +258,14 @@
             height: 0;
             border-left: 15px solid transparent;
             border-right: 15px solid transparent;
-            border-bottom: 60px solid #228B22;
+            border-bottom: 40px solid #228B22;
             transition: all 1s ease-in-out;
         }
 
         .tree::before {
             content: '';
             position: absolute;
-            bottom: -70px;
+            bottom: -50px; /* Adjusted position */
             left: -5px;
             width: 10px;
             height: 10px;
@@ -275,12 +275,12 @@
         .tree.large {
             border-left-width: 25px;
             border-right-width: 25px;
-            border-bottom-width: 100px;
+            border-bottom-width: 70px;
             border-bottom-color: #1F5F1F;
         }
 
         .tree.large::before {
-            bottom: -115px;
+            bottom: -85px; /* Adjusted position */
             left: -8px;
             width: 16px;
             height: 15px;
@@ -289,12 +289,12 @@
         .tree.medium {
             border-left-width: 20px;
             border-right-width: 20px;
-            border-bottom-width: 80px;
+            border-bottom-width: 50px;
             border-bottom-color: #1F7F1F;
         }
 
         .tree.medium::before {
-            bottom: -92px;
+            bottom: -65px; /* Adjusted position */
             left: -6px;
             width: 12px;
             height: 12px;
@@ -397,30 +397,38 @@
             opacity: 0;
             transition: opacity 2s ease-in-out;
             animation: ripple 3s infinite;
+            overflow: hidden;
         }
 
-        .lake.visible {
-            opacity: 1;
-        }
-
-        /* Moon reflection in the lake */
+        /* Simplified lake reflection */
         .lake::after {
             content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        /* Moon reflection */
+        .lake-reflection {
             position: absolute;
             top: 20px;
             right: 30px;
             width: 40px;
             height: 40px;
-            background: #FFFACD;
+            background: rgba(255, 250, 205, 0.6);
             border-radius: 50%;
             opacity: 0;
+            box-shadow: 0 0 15px rgba(255, 250, 205, 0.6);
             transition: opacity 2s ease-in-out;
             animation: ripple-reflection 3s infinite;
-            box-shadow: 0 0 15px rgba(255, 250, 205, 0.6);
         }
 
-        .lake.visible::after {
-            opacity: 0.7;
+        .lake.visible .lake-reflection {
+            opacity: 1;
         }
 
         @keyframes ripple {
@@ -430,11 +438,11 @@
 
         @keyframes ripple-reflection {
             0%, 100% { 
-                transform: scale(1) scaleY(0.8);
+                transform: scale(1);
                 opacity: 0.7;
             }
             50% { 
-                transform: scale(1.05) scaleY(0.85);
+                transform: scale(1.1);
                 opacity: 0.5;
             }
         }
@@ -546,7 +554,9 @@
         <div class="bushes" id="bushes"></div>
         <div class="flowers" id="flowers"></div>
         <div class="mushrooms" id="mushrooms"></div>
-        <div class="lake" id="lake"></div>
+        <div class="lake" id="lake">
+            <div class="lake-reflection"></div>
+        </div>
         <div class="trail"></div>
         <div class="character" id="character">
             <div class="head"></div>
@@ -589,6 +599,8 @@
                 this.flowers = document.getElementById('flowers');
                 this.mushrooms = document.getElementById('mushrooms');
                 this.soundIndicator = document.getElementById('soundIndicator');
+                this.audioContext = null;
+                this.audioAllowed = false;
                 
                 this.steps = [
                     {
@@ -673,9 +685,16 @@
                 this.createBushes();
                 this.createFlowers();
                 this.createMushrooms();
-                this.nextButton.addEventListener('click', () => this.nextStep());
+                
+                // Initialize audio on first button click
+                this.nextButton.addEventListener('click', () => {
+                    if (!this.audioContext) {
+                        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    }
+                    this.nextStep();
+                });
+                
                 this.showBlurb(this.steps[0].text);
-                this.playSound('tree');
             }
             
             createInitialTrees() {
@@ -829,17 +848,13 @@
                     setTimeout(() => {
                         this.showBirthdayCard();
                     }, 3000);
-                } else {
-                    // Re-enable button for next step
-                    setTimeout(() => {
-                        this.nextButton.disabled = false;
-                        this.currentStep++;
-                    }, 2000);
                 }
                 
-                if (!step.final) {
+                // Re-enable button for next step
+                setTimeout(() => {
+                    this.nextButton.disabled = false;
                     this.currentStep++;
-                }
+                }, 2000);
             }
             
             showBlurb(text) {
@@ -873,29 +888,31 @@
                     // Show sound indicator
                     this.showSoundIndicator();
                     
-                    // Create audio context for sound generation
-                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    // Resume context if suspended
+                    if (this.audioContext && this.audioContext.state === 'suspended') {
+                        await this.audioContext.resume();
+                    }
                     
-                    // Resume context if suspended (required for user interaction)
-                    if (audioContext.state === 'suspended') {
-                        await audioContext.resume();
+                    if (!this.audioContext) {
+                        console.log('Audio context not initialized');
+                        return;
                     }
                     
                     switch(type) {
                         case 'tree':
-                            this.playTreeSound(audioContext);
+                            this.playTreeSound();
                             break;
                         case 'cricket':
-                            this.playCricketSound(audioContext);
+                            this.playCricketSound();
                             break;
                         case 'frog':
-                            this.playFrogSound(audioContext);
+                            this.playFrogSound();
                             break;
                         case 'wind':
-                            this.playWindSound(audioContext);
+                            this.playWindSound();
                             break;
                         case 'lake':
-                            this.playLakeSound(audioContext);
+                            this.playLakeSound();
                             break;
                     }
                 } catch (error) {
@@ -903,7 +920,8 @@
                 }
             }
             
-            playTreeSound(ctx) {
+            playTreeSound() {
+                const ctx = this.audioContext;
                 const oscillator = ctx.createOscillator();
                 const gainNode = ctx.createGain();
                 
@@ -919,3 +937,118 @@
                 
                 oscillator.type = 'sawtooth';
                 oscillator.start(ctx.currentTime);
+                oscillator.stop(ctx.currentTime + 1);
+            }
+            
+            playCricketSound() {
+                const ctx = this.audioContext;
+                for (let i = 0; i < 3; i++) {
+                    setTimeout(() => {
+                        const oscillator = ctx.createOscillator();
+                        const gainNode = ctx.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(ctx.destination);
+                        
+                        oscillator.frequency.setValueAtTime(3000 + Math.random() * 1000, ctx.currentTime);
+                        oscillator.type = 'square';
+                        
+                        gainNode.gain.setValueAtTime(0, ctx.currentTime);
+                        gainNode.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 0.01);
+                        gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+                        
+                        oscillator.start(ctx.currentTime);
+                        oscillator.stop(ctx.currentTime + 0.1);
+                    }, i * 200);
+                }
+            }
+            
+            playFrogSound() {
+                const ctx = this.audioContext;
+                const oscillator = ctx.createOscillator();
+                const gainNode = ctx.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(ctx.destination);
+                
+                oscillator.frequency.setValueAtTime(100, ctx.currentTime);
+                oscillator.frequency.linearRampToValueAtTime(80, ctx.currentTime + 0.2);
+                oscillator.frequency.linearRampToValueAtTime(100, ctx.currentTime + 0.4);
+                
+                gainNode.gain.setValueAtTime(0, ctx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.05);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                
+                oscillator.type = 'sine';
+                oscillator.start(ctx.currentTime);
+                oscillator.stop(ctx.currentTime + 0.4);
+            }
+            
+            playWindSound() {
+                const ctx = this.audioContext;
+                const bufferSize = ctx.sampleRate * 2;
+                const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+                const data = buffer.getChannelData(0);
+                
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = (Math.random() * 2 - 1) * 0.1;
+                }
+                
+                const source = ctx.createBufferSource();
+                const filter = ctx.createBiquadFilter();
+                const gainNode = ctx.createGain();
+                
+                source.buffer = buffer;
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(500, ctx.currentTime);
+                
+                source.connect(filter);
+                filter.connect(gainNode);
+                gainNode.connect(ctx.destination);
+                
+                gainNode.gain.setValueAtTime(0, ctx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.5);
+                gainNode.gain.linearRampToValueAtTime(0, ctx.currentTime + 2);
+                
+                source.start(ctx.currentTime);
+                source.stop(ctx.currentTime + 2);
+            }
+            
+            playLakeSound() {
+                const ctx = this.audioContext;
+                const oscillator1 = ctx.createOscillator();
+                const oscillator2 = ctx.createOscillator();
+                const gainNode = ctx.createGain();
+                
+                oscillator1.connect(gainNode);
+                oscillator2.connect(gainNode);
+                gainNode.connect(ctx.destination);
+                
+                oscillator1.frequency.setValueAtTime(220, ctx.currentTime);
+                oscillator1.frequency.linearRampToValueAtTime(200, ctx.currentTime + 2);
+                
+                oscillator2.frequency.setValueAtTime(110, ctx.currentTime);
+                oscillator2.frequency.linearRampToValueAtTime(100, ctx.currentTime + 2);
+                
+                gainNode.gain.setValueAtTime(0, ctx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 0.2);
+                gainNode.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 1.8);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 2);
+                
+                oscillator1.type = 'sine';
+                oscillator2.type = 'sine';
+                
+                oscillator1.start(ctx.currentTime);
+                oscillator2.start(ctx.currentTime);
+                oscillator1.stop(ctx.currentTime + 2);
+                oscillator2.stop(ctx.currentTime + 2);
+            }
+        }
+        
+        // Start the game when page loads
+        window.addEventListener('load', () => {
+            new PixelHike();
+        });
+    </script>
+</body>
+</html>
