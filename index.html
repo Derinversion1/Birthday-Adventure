@@ -3,994 +3,842 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Temi's birthday hike</title>
+    <title>Temi's Birthday Hike</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-        
-        * {
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Press Start 2P', monospace;
-            background: linear-gradient(to bottom, #87CEEB 0%, #98FB98 30%, #228B22 100%);
-            min-height: 100vh;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .game-container {
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .background {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, #87CEEB 0%, #98FB98 30%, #228B22 100%);
-            transition: all 3s ease-in-out;
-        }
-
-        .sunset-1 {
-            background: linear-gradient(to bottom, #FFB347 0%, #98FB98 40%, #228B22 100%);
-        }
-
-        .sunset-2 {
-            background: linear-gradient(to bottom, #FF6347 0%, #FFB347 30%, #90EE90 50%, #228B22 100%);
-        }
-
-        .sunset-3 {
-            background: linear-gradient(to bottom, #DC143C 0%, #FF6347 25%, #FFB347 45%, #8FBC8F 70%, #2F4F2F 100%);
-        }
-
-        .sunset-4 {
-            background: linear-gradient(to bottom, #800080 0%, #DC143C 20%, #FF6347 40%, #FFB347 55%, #556B2F 80%, #2F4F2F 100%);
-        }
-
-        .dusk {
-            background: linear-gradient(to bottom, #483D8B 0%, #800080 25%, #2F4F2F 60%, #1C3A1C 100%);
-        }
-
-        .night-sky {
-            background: linear-gradient(to bottom, #191970 0%, #000080 50%, #1e3a5f 100%);
-        }
-
-        .sun {
-            position: absolute;
-            top: 15%;
-            right: 20%;
-            width: 60px;
-            height: 60px;
-            background: #FFD700;
-            border-radius: 50%;
-            box-shadow: 0 0 20px #FFD700;
-            transition: all 3s ease-in-out;
-            opacity: 1;
-        }
-
-        .sun.setting {
-            top: 40%;
-            right: 15%;
-            background: #FF6347;
-            box-shadow: 0 0 30px #FF6347;
-        }
-
-        .sun.hidden {
-            opacity: 0;
-            top: 60%;
-        }
-
-        .moon {
-            position: absolute;
-            top: 10%;
-            right: 15%;
-            width: 80px;
-            height: 80px;
-            background: #FFFACD;
-            border-radius: 50%;
-            box-shadow: 0 0 30px #FFFACD;
-            opacity: 0;
-            transition: opacity 2s ease-in-out;
-        }
-
-        .moon.visible {
-            opacity: 1;
-        }
-
-        .stars {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: opacity 2s ease-in-out;
-        }
-
-        .stars.visible {
-            opacity: 1;
-        }
-
-        .star {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 2s infinite alternate;
-        }
-
-        @keyframes twinkle {
-            0% { opacity: 0.3; }
-            100% { opacity: 1; }
-        }
-
-        .trail {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 20px;
-            background: #8B4513;
-            background-image: repeating-linear-gradient(
-                45deg,
-                #A0522D 0px,
-                #A0522D 10px,
-                #8B4513 10px,
-                #8B4513 20px
-            );
-        }
-
-        .character {
-            position: absolute;
-            bottom: 20px;
-            left: 50px;
-            width: 32px;
-            height: 40px;
-            transition: left 1s ease-in-out;
-            image-rendering: pixelated;
-            z-index: 10;
-        }
-
-        /* Red sweater body */
-        .character::before {
-            content: '';
-            position: absolute;
-            top: 8px;
-            left: 6px;
-            width: 20px;
-            height: 20px;
-            background: #DC143C;
-            border-radius: 2px;
-        }
-
-        /* Black cargo pants */
-        .character::after {
-            content: '';
-            position: absolute;
-            bottom: 8px;
-            left: 8px;
-            width: 16px;
-            height: 16px;
-            background: #2F2F2F;
-            border-radius: 1px;
-        }
-
-        /* Caramel skin head */
-        .character .head {
-            position: absolute;
-            top: -4px;
-            left: 10px;
-            width: 12px;
-            height: 12px;
-            background: #D2B48C;
-            border-radius: 1px;
-        }
-
-        /* Red beanie */
-        .character .beanie {
-            position: absolute;
-            top: -8px;
-            left: 8px;
-            width: 16px;
-            height: 8px;
-            background: #DC143C;
-            border-radius: 50% 50% 20% 20%;
-        }
-
-        /* Black boots */
-        .character .boot-left {
-            position: absolute;
-            bottom: 0;
-            left: 6px;
-            width: 8px;
-            height: 8px;
-            background: #1C1C1C;
-            border-radius: 2px;
-        }
-
-        .character .boot-right {
-            position: absolute;
-            bottom: 0;
-            right: 6px;
-            width: 8px;
-            height: 8px;
-            background: #1C1C1C;
-            border-radius: 2px;
-        }
-
-        /* Arms */
-        .character .arm-left {
-            position: absolute;
-            top: 10px;
-            left: 2px;
-            width: 4px;
-            height: 12px;
-            background: #DC143C;
-            border-radius: 2px;
-        }
-
-        .character .arm-right {
-            position: absolute;
-            top: 10px;
-            right: 2px;
-            width: 4px;
-            height: 12px;
-            background: #DC143C;
-            border-radius: 2px;
-        }
-
-        .trees {
-            position: absolute;
-            bottom: 60px;
-            width: 100%;
-            height: 200px;
-            overflow: hidden;
-        }
-
-        .tree {
-            position: absolute;
-            bottom: 0;
-            width: 0;
-            height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-bottom: 40px solid #228B22;
-            transition: all 1s ease-in-out;
-        }
-
-        .tree::before {
-            content: '';
-            position: absolute;
-            bottom: -50px;
-            left: -5px;
-            width: 10px;
-            height: 10px;
-            background: #8B4513;
-        }
-
-        .tree.large {
-            border-left-width: 25px;
-            border-right-width: 25px;
-            border-bottom-width: 70px;
-            border-bottom-color: #1F5F1F;
-        }
-
-        .tree.large::before {
-            bottom: -85px;
-            left: -8px;
-            width: 16px;
-            height: 15px;
-        }
-
-        .tree.medium {
-            border-left-width: 20px;
-            border-right-width: 20px;
-            border-bottom-width: 50px;
-            border-bottom-color: #1F7F1F;
-        }
-
-        .tree.medium::before {
-            bottom: -65px;
-            left: -6px;
-            width: 12px;
-            height: 12px;
-        }
-
-        .bushes {
-            position: absolute;
-            bottom: 20px;
-            width: 100%;
-            height: 40px;
-        }
-
-        .bush {
-            position: absolute;
-            bottom: 0;
-            width: 30px;
-            height: 20px;
-            background: #32CD32;
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-        }
-
-        .flowers {
-            position: absolute;
-            bottom: 25px;
-            width: 100%;
-            height: 20px;
-        }
-
-        .flower {
-            position: absolute;
-            bottom: 0;
-            width: 6px;
-            height: 6px;
-            background: #FF69B4;
-            border-radius: 50%;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-        }
-
-        .flower::before {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 2px;
-            width: 2px;
-            height: 8px;
-            background: #32CD32;
-        }
-
-        .mushrooms {
-            position: absolute;
-            bottom: 22px;
-            width: 100%;
-            height: 15px;
-        }
-
-        .mushroom {
-            position: absolute;
-            bottom: 0;
-            width: 12px;
-            height: 8px;
-            background: #DC143C;
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-        }
-
-        .mushroom::before {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            left: 4px;
-            width: 4px;
-            height: 6px;
-            background: #F5F5DC;
-        }
-
-        .mushroom::after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 3px;
-            height: 3px;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 5px 0 0 -1px white;
-        }
-
-        .lake {
-            position: absolute;
-            bottom: 20px;
-            right: 50px;
-            width: 200px;
-            height: 100px;
-            background: #4169E1;
-            border-radius: 50%;
-            opacity: 0;
-            transition: opacity 2s ease-in-out;
-            animation: ripple 3s infinite;
-            overflow: hidden;
-        }
-
-        .lake.visible {
-            opacity: 0.8;
-        }
-
-        /* Lake reflection */
-        .lake::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-        }
-
-        /* Moon reflection */
-        .lake-reflection {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 250, 205, 0.6);
-            border-radius: 50%;
-            opacity: 0;
-            box-shadow: 0 0 15px rgba(255, 250, 205, 0.6);
-            transition: opacity 2s ease-in-out;
-            animation: ripple-reflection 3s infinite;
-        }
-
-        .lake.visible .lake-reflection {
-            opacity: 1;
-        }
-
-        @keyframes ripple {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        @keyframes ripple-reflection {
-            0%, 100% { 
-                transform: scale(1);
-                opacity: 0.7;
-            }
-            50% { 
-                transform: scale(1.1);
-                opacity: 0.5;
-            }
-        }
-
-        /* Animal sprites */
-        .animals {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: opacity 2s ease-in-out;
-        }
-
-        .animals.visible {
-            opacity: 1;
-        }
-
-        .cricket {
-            position: absolute;
-            bottom: 45px;
-            left: 30%;
-            width: 8px;
-            height: 6px;
-            background: #228B22;
-            border-radius: 3px;
-            opacity: 0;
-            animation: hop 2s infinite;
-        }
-
-        .cricket::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: 1px;
-            width: 2px;
-            height: 4px;
-            background: #228B22;
-            border-radius: 1px;
-        }
-
-        .cricket::after {
-            content: '';
-            position: absolute;
-            top: -2px;
-            right: 1px;
-            width: 2px;
-            height: 4px;
-            background: #228B22;
-            border-radius: 1px;
-        }
-
-        .frog {
-            position: absolute;
-            bottom: 25px;
-            right: 25%;
-            width: 12px;
-            height: 8px;
-            background: #32CD32;
-            border-radius: 50%;
-            opacity: 0;
-            animation: bounce 3s infinite;
-        }
-
-        .frog::before {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 2px;
-            height: 2px;
             background: #000;
-            border-radius: 50%;
-            box-shadow: 6px 0 0 #000;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
-
-        .owl {
-            position: absolute;
-            bottom: 150px;
-            left: 15%;
-            width: 16px;
-            height: 20px;
-            background: #8B4513;
-            border-radius: 50% 50% 40% 40%;
-            opacity: 0;
-            animation: sway 4s infinite;
+        
+        #gameContainer {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            border: 4px solid #fff;
+            background: #000;
         }
-
-        .owl::before {
-            content: '';
-            position: absolute;
-            top: 6px;
-            left: 3px;
-            width: 3px;
-            height: 3px;
-            background: #FFD700;
-            border-radius: 50%;
-            box-shadow: 7px 0 0 #FFD700;
+        
+        #gameCanvas {
+            display: block;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            width: 100%;
+            height: 100%;
         }
-
-        .owl::after {
-            content: '';
-            position: absolute;
-            top: 10px;
-            left: 6px;
-            width: 4px;
-            height: 2px;
-            background: #FFA500;
-            border-radius: 0 0 50% 50%;
-        }
-
-        @keyframes hop {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-3px); }
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1) translateY(-2px); }
-        }
-
-        @keyframes sway {
-            0%, 100% { transform: rotate(-2deg); }
-            50% { transform: rotate(2deg); }
-        }
-
-        .ui {
+        
+        #ui {
             position: absolute;
             top: 20px;
             left: 20px;
-            z-index: 100;
+            text-align: left;
+            z-index: 10;
+            max-width: 350px;
         }
-
-        .blurb {
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            max-width: 300px;
-            margin-bottom: 20px;
-            font-size: 10px;
+        
+        #message {
+            background: rgba(0,0,0,0.9);
+            color: #fff;
+            padding: 20px 30px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            font-size: 18px;
+            max-width: 500px;
+            border: 3px solid #fff;
+            box-shadow: 0 0 20px rgba(255,255,255,0.3);
             line-height: 1.4;
-            opacity: 0;
-            transform: translateY(-20px);
-            transition: all 0.5s ease;
         }
-
-        .blurb.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .next-button {
-            background: #FF6B6B;
+        
+        #continueButton {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
             color: white;
             border: none;
-            padding: 12px 20px;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 10px;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 25px;
             cursor: pointer;
-            border-radius: 5px;
-            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 3px solid #fff;
+            box-shadow: 0 5px 15px rgba(255,107,107,0.4);
         }
-
-        .next-button:hover {
-            background: #FF5252;
-            transform: scale(1.05);
+        
+        #continueButton:hover {
+            background: linear-gradient(45deg, #ff5252, #ff7979);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255,107,107,0.6);
         }
-
-        .next-button:disabled {
-            background: #666;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .birthday-card {
-            position: fixed;
+        
+        #birthdayCard {
+            display: none;
+            position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
-            color: white;
-            padding: 40px;
-            border-radius: 20px;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 50px;
+            border-radius: 25px;
             text-align: center;
-            font-size: 12px;
-            line-height: 2;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            z-index: 1000;
-            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            border: 5px solid #fff;
+            max-width: 450px;
+            animation: cardAppear 1.5s ease-out;
+            z-index: 20;
         }
-
-        .birthday-card.show {
-            transform: translate(-50%, -50%) scale(1);
+        
+        @keyframes cardAppear {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.3) rotate(-10deg);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1) rotate(2deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+            }
         }
-
-        .birthday-card h1 {
-            font-size: 16px;
-            margin-bottom: 20px;
+        
+        #birthdayCard h1 {
+            color: #fff;
+            font-size: 32px;
+            margin-bottom: 25px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: bounce 2s infinite;
         }
-
-        /* Sound indicator */
-        .sound-indicator {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 8px;
-            opacity: 0;
-            transition: opacity 0.3s;
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
         }
-
-        .sound-indicator.show {
-            opacity: 1;
+        
+        #birthdayCard p {
+            color: #f8f9fa;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
         }
     </style>
 </head>
 <body>
-    <div class="game-container">
-        <div class="background" id="background">
-            <div class="sun" id="sun"></div>
-            <div class="stars" id="stars"></div>
-            <div class="moon" id="moon"></div>
+    <div id="gameContainer">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        
+        <div id="ui">
+            <div id="message">Hello my love, What better way to celebrate your birthday than a little hike?</div>
+            <button id="continueButton">Start Journey</button>
         </div>
         
-        <div class="trees" id="trees"></div>
-        <div class="bushes" id="bushes"></div>
-        <div class="flowers" id="flowers"></div>
-        <div class="mushrooms" id="mushrooms"></div>
-        <div class="lake" id="lake">
-            <div class="lake-reflection"></div>
-        </div>
-        <div class="animals" id="animals">
-            <div class="cricket"></div>
-            <div class="frog"></div>
-            <div class="owl"></div>
-        </div>
-        <div class="trail"></div>
-        <div class="character" id="character">
-            <div class="head"></div>
-            <div class="beanie"></div>
-            <div class="arm-left"></div>
-            <div class="arm-right"></div>
-            <div class="boot-left"></div>
-            <div class="boot-right"></div>
-        </div>
-        
-        <div class="ui">
-            <div class="blurb" id="blurb"></div>
-            <button class="next-button" id="nextButton">Start Your Journey</button>
-        </div>
-        
-        <div class="sound-indicator" id="soundIndicator">🔊 Playing sounds...</div>
-        
-        <div class="birthday-card" id="birthdayCard">
-            <h1>🎂 Happy Birthday! 🎂</h1>
-            <p>You've reached the end of this magical journey, just like how you've journeyed into another wonderful year of life!</p>
-            <p>May your path ahead be filled with as much beauty and wonder as this moonlit lake.</p>
-            <p>With all my love ❤️</p>
+        <div id="birthdayCard">
+            <h1>🎉 Happy Birthday My Love! 🎉</h1>
+            <p>I hope this new chapter in your life brings you lots of joy!</p>
+            <p>Enjoy your day, you deserve every good thing life has to offer</p>
+			<p>Like a hike, every step with you is an adventure.</p>
+            <p>Here's to many more adventures! 💕</p>
+            <p><strong>With all my love,</strong><br>Mr Thoughtful</p>
         </div>
     </div>
 
     <script>
-        class PixelHike {
-            constructor() {
-                this.currentStep = 0;
-                this.character = document.getElementById('character');
-                this.blurb = document.getElementById('blurb');
-                this.nextButton = document.getElementById('nextButton');
-                this.background = document.getElementById('background');
-                this.sun = document.getElementById('sun');
-                this.moon = document.getElementById('moon');
-                this.stars = document.getElementById('stars');
-                this.lake = document.getElementById('lake');
-                this.animals = document.getElementById('animals');
-                this.birthdayCard = document.getElementById('birthdayCard');
-                this.bushes = document.getElementById('bushes');
-                this.flowers = document.getElementById('flowers');
-                this.mushrooms = document.getElementById('mushrooms');
-                this.soundIndicator = document.getElementById('soundIndicator');
-                this.audioContext = null;
-                this.audioAllowed = false;
-                this.ambientGain = null;
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const message = document.getElementById('message');
+        const button = document.getElementById('continueButton');
+        const birthdayCard = document.getElementById('birthdayCard');
+		let soundBuffers = {}; 
+        let ambientSource = null; 
+
+        async function loadSound(name, url) {
+            if (!audioContext) initAudio(); // Ensure context is ready
+            try {
+                const response = await fetch(url);
+                const arrayBuffer = await response.arrayBuffer();
+                soundBuffers[name] = await audioContext.decodeAudioData(arrayBuffer);
+                console.log(`Loaded sound: ${name}`);
+            } catch (error) {
+                console.error(`Error loading sound ${name} from ${url}:`, error);
+            }
+        }
+
+        // Plays a loaded sound by name
+        function playSound(name, loop = false) {
+            if (!audioContext || !soundBuffers[name]) {
+                console.warn(`Sound "${name}" not loaded or audioContext not ready.`);
+                return null;
+            }
+
+            // Create a new source node each time a sound is played
+            const source = audioContext.createBufferSource();
+            source.buffer = soundBuffers[name];
+            source.connect(ambientGain); // Connect to ambientGain for overall volume control
+            source.loop = loop;
+            source.start(0);
+            return source; // Return the source node for potential stopping later
+        }
+        
+        let currentStep = 0;
+        let audioContext;
+        let ambientGain;
+        let isAudioInitialized = false;
+        let targetCharacterX = 100;
+        let currentCharacterX = 100;
+        const characterSpeed = 2;
+        let isMoving = false;
+        
+        let currentWalkAnimationFrame = 0; // This will count up continuously
+        let currentWalkFrameIndex = 0; // This will index into walkCycleOffsets
+        const walkFrameAnimationRate = 5; // How many animation frames pass before changing walk sprite frame
+
+        // Pixel scale for crisp rendering
+        const PIXEL_SCALE = 4;
+        
+        // Game progression data
+        const gameSteps = [
+            {
+                message: "🌲 You step deeper into the woods. The Iroko trees whisper happy birthday wishes as you pass by their ancient trunks.",
+                environmentSound: () => playSound('leavesRustling'),
+                skyColor: { top: '#87CEEB', bottom: '#98FB98' }, // Bright day
+                treeCount: 8,
+                sunPosition: { x: 650, y: 80 },
+                moonPosition: null, // No moon at this step
+                characterX: 100,
+                showPartyAnimals: false,
+                lakeVisible: false
+            },
+            {
+                message: "🦗 It's getting late, the sun is setting. Can you hear the crickets starting their birthday serenade?",
+                environmentSound: () => playSound('cricketsChirping'),
+                skyColor: { top: '#FFB347', bottom: '#FFA07A' }, // Golden hour
+                treeCount: 12,
+                sunPosition: { x: 600, y: 100 },
+                moonPosition: { x: 720, y: 60, opacity: 0.1 },
+                characterX: 200,
+                showPartyAnimals: false,
+                lakeVisible: false
+            },
+            {
+                message: "� A family of friendly frogs greets you! They croak excitedly",
+                environmentSound: () => playSound('frogCroaking'),
+                skyColor: { top: '#FF7F50', bottom: '#FF6347' }, // Sunset
+                treeCount: 16,
+                sunPosition: { x: 550, y: 140 },
+                moonPosition: { x: 720, y: 70, opacity: 0.3 },
+                characterX: 300,
+                showPartyAnimals: false,
+                lakeVisible: false
+            },
+            {
+                message: "💨 Deeper in now, It's just you and the wind. It spurs you forward.",
+                environmentSound: () => playSound('windGust'),
+                skyColor: { top: '#4169E1', bottom: '#6A5ACD' }, // Dusk
+                treeCount: 20,
+                sunPosition: { x: 500, y: 200 },
+                moonPosition: { x: 700, y: 80, opacity: 0.7 },
+                characterX: 400,
+                showPartyAnimals: false,
+                lakeVisible: false
+            },
+            {
+                message: "🌙 The gurgling of the lake tells you you're in the right place. The enchanted moonlit lake sparkles before you like a field of diamonds. It looks like all the animals came to celebrate you!",
+                environmentSound: () => playSound('waterLapping'),
+                skyColor: { top: '#191970', bottom: '#483D8B' }, // Night
+                treeCount: 24,
+                sunPosition: null,
+                moonPosition: { x: 700, y: 80, opacity: 1.0 }, // Full moon only here
+                lakeVisible: true,
+                showPartyAnimals: true, // Animals appear here (penultimate slide)
+                characterX: 500
+            }
+        ];
+        
+        // Initialize audio system
+        function initAudio() {
+            await loadSound('forestAmbient', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'); // General forest ambiance
+            await loadSound('leavesRustling', 'https://www.soundjay.com/nature/leaves-rustling-1.mp3');
+            await loadSound('cricketsChirping', 'https://www.soundjay.com/nature/crickets-chirping-1.mp3');
+            await loadSound('frogCroaking', 'https://www.soundjay.com/nature/frog-croaking-1.mp3');
+            await loadSound('windGust', 'https://www.soundjay.com/nature/wind-2.mp3'); // Another wind sound
+            await loadSound('waterLapping', 'https://www.soundjay.com/nature/water-lapping-1.mp3');
+			ambientSource = playSound('forestAmbient', true); // Play on loop
+            if (isAudioInitialized) return;
+            
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // Create ambient sound system
+            ambientGain = audioContext.createGain();
+            ambientGain.connect(audioContext.destination);
+            ambientGain.gain.value = 0.1;
+            
+            startAmbientForestSounds();
+            isAudioInitialized = true;
+        }
+        
+        // Ambient forest sounds that play continuously
+        function startAmbientForestSounds() {
+           
+        }
+        
+ 
+        
+        // Specific environment sounds
+        function playTreeSounds() {
+            // Wind through trees - layered sounds
+            for(let i = 0; i < 8; i++) {
+                setTimeout(() => {
+                    createNoise(1.5, 0.1, 100, 500); // Broader wind sound
+                }, i * 150);
+            }
+        }
+        
+        function playCricketSounds() {
+            // Realistic cricket chirps (short, high-frequency bursts with a quick decay)
+            for(let i = 0; i < 12; i++) {
+                setTimeout(() => {
+                    const freq = 4000 + Math.random() * 1000;
+                    const duration = 0.08 + Math.random() * 0.05;
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
+                    oscillator.type = 'square'; // Buzzier sound
+                    
+                    gainNode.gain.setValueAtTime(0.25, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + duration);
+                    
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + duration);
+                }, i * (150 + Math.random() * 100)); // Vary timing for more natural feel
+            }
+        }
+        
+        function playFrogSounds() {
+            // Realistic frog croaks (low frequency, guttural sounds)
+            const frogCroaks = [
+                { freq: 80, duration: 0.6, type: 'sawtooth' },
+                { freq: 110, duration: 0.5, type: 'square' },
+                { freq: 95, duration: 0.7, type: 'triangle' },
+                { freq: 130, duration: 0.4, type: 'sine' }
+            ];
+            
+            frogCroaks.forEach((sound, i) => {
+                setTimeout(() => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(sound.freq, audioContext.currentTime);
+                    oscillator.type = sound.type;
+                    
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + sound.duration);
+                    
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + sound.duration);
+                    
+                    // Add a subtle noise element for more realism
+                    createNoise(sound.duration * 0.8, 0.05, 50, 300);
+                }, i * (400 + Math.random() * 200)); // Vary timing
+            });
+        }
+        
+        function playWindSounds() {
+            // Strong mountain wind
+            for(let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    createNoise(2.0, 0.15, 50, 400); // Stronger, broader band noise
+                }, i * 100);
+            }
+        }
+        
+        function playLakeAndGurgleSounds() {
+            // Gentle water lapping (more noise-based with low frequencies)
+            for(let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    createNoise(1.5, 0.1, 20, 100);
+                }, i * 300);
+            }
+            
+            // Water gurgling sounds (bursts of noise with higher frequencies)
+            setTimeout(() => {
+                for(let i = 0; i < 8; i++) {
+                    setTimeout(() => {
+                        createNoise(0.5, 0.1, 200, 800);
+                    }, i * 400);
+                }
+            }, 1000);
+        }
+        
+        // Compact character drawing
+        function drawCharacter(x, y, hasPartyHat = false) {
+            const scale = PIXEL_SCALE;
+            const bodyY = y + 8 * scale; // Adjust base Y for more compact look
+
+            // Walking animation offsets
+            // [leftLegYOffset, rightLegYOffset, leftArmYOffset, rightArmYOffset]
+            const walkCycleOffsets = [
+                [0, 0, 0, 0], // Standing (neutral pose)
+                [scale, -scale, -scale, scale], // Left leg forward, right back, arms counter
+                [0, 0, 0, 0], // Standing (neutral pose)
+                [-scale, scale, scale, -scale] // Right leg forward, left back, arms counter
+            ];
+            
+            const currentOffsets = walkCycleOffsets[currentWalkFrameIndex];
+            const [llY, rlY, laY, raY] = currentOffsets;
+            
+            // Brown skin
+            ctx.fillStyle = '#8B4513'; // Brown skin color
+            ctx.fillRect(x + 2*scale, bodyY, 4*scale, 4*scale); // head
+            
+            // Eye (single dot on the right side of the head)
+            ctx.fillStyle = '#000'; // Black color for the eye
+            ctx.fillRect(x + 4.25*scale, bodyY + 1*scale, 1.5*scale, 1.5*scale); // Single eye on the right
+
+            ctx.fillStyle = '#8B4513'; // Revert to skin color for arms (brown)
+            ctx.fillRect(x + 1*scale, bodyY + 6*scale + laY, 2*scale, 2*scale); // left arm
+            ctx.fillRect(x + 5*scale, bodyY + 6*scale + raY, 2*scale, 2*scale); // right arm
+            
+            // Red beanie
+            ctx.fillStyle = '#DC143C';
+            ctx.fillRect(x + 1*scale, bodyY - 1*scale, 6*scale, 3*scale); // beanie base
+            ctx.fillRect(x + 2*scale, bodyY - 2*scale, 4*scale, 2*scale); // beanie top
+            
+            // Red sweater
+            ctx.fillStyle = '#DC143C';
+            ctx.fillRect(x + 1*scale, bodyY + 4*scale, 6*scale, 4*scale); // torso
+            
+            // Black pants
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(x + 2*scale, bodyY + 8*scale + llY, 2*scale, 4*scale); // left leg
+            ctx.fillRect(x + 4*scale, bodyY + 8*scale + rlY, 2*scale, 4*scale); // right leg
+            
+            // Party hat (only at the end)
+            if (hasPartyHat) {
+                ctx.fillStyle = '#FFD700'; // Gold hat
+                ctx.fillRect(x + 3*scale, bodyY - 4*scale, 2*scale, 4*scale); // hat cone
+                ctx.fillStyle = '#FF1493'; // Pink band
+                ctx.fillRect(x + 2*scale, bodyY - 1*scale, 4*scale, 1*scale);
+                ctx.fillStyle = '#FFD700'; // Gold pom pom
+                ctx.fillRect(x + 3*scale, bodyY - 5*scale, 2*scale, 1*scale);
+            }
+        }
+        
+        // Frog sprite with party hat
+        function drawFrog(x, y, hasPartyHat = false) {
+            const scale = PIXEL_SCALE;
+            
+            ctx.fillStyle = '#228B22'; // Green body
+            // Body
+            ctx.fillRect(x + 2*scale, y + 4*scale, 8*scale, 4*scale);
+            // Legs
+            ctx.fillRect(x, y + 6*scale, 2*scale, 2*scale); // Left front
+            ctx.fillRect(x + 10*scale, y + 6*scale, 2*scale, 2*scale); // Right front
+            ctx.fillRect(x + 1*scale, y + 8*scale, 2*scale, 2*scale); // Left back
+            ctx.fillRect(x + 9*scale, y + 8*scale, 2*scale, 2*scale); // Right back
+            // Head
+            ctx.fillRect(x + 3*scale, y + 2*scale, 6*scale, 3*scale);
+            
+            // Eyes
+            ctx.fillStyle = '#000';
+            ctx.fillRect(x + 4*scale, y + 2*scale, 1*scale, 1*scale);
+            ctx.fillRect(x + 7*scale, y + 2*scale, 1*scale, 1*scale);
+            
+            // Party hat
+            if (hasPartyHat) {
+                ctx.fillStyle = '#FF1493'; // Pink hat
+                ctx.fillRect(x + 4*scale, y - 1*scale, 4*scale, 2*scale);
+                ctx.fillStyle = '#FFD700'; // Gold pom pom
+                ctx.fillRect(x + 5*scale, y - 2*scale, 2*scale, 1*scale);
+            }
+        }
+        
+        // Cricket sprite with party hat
+        function drawCricket(x, y, hasPartyHat = false) {
+            const scale = PIXEL_SCALE;
+            
+            ctx.fillStyle = '#2F4F2F'; // Dark green/brown body
+            // Body segments
+            ctx.fillRect(x + 2*scale, y + 3*scale, 4*scale, 2*scale); // Main body
+            ctx.fillRect(x + 6*scale, y + 3*scale, 2*scale, 2*scale); // Abdomen
+            // Legs (thin)
+            ctx.fillRect(x + 1*scale, y + 4*scale, 1*scale, 1*scale); // Front left
+            ctx.fillRect(x + 7*scale, y + 4*scale, 1*scale, 1*scale); // Front right
+            ctx.fillRect(x + 0*scale, y + 5*scale, 1*scale, 2*scale); // Middle left
+            ctx.fillRect(x + 8*scale, y + 5*scale, 1*scale, 2*scale); // Middle right
+            ctx.fillRect(x + 1*scale, y + 7*scale, 1*scale, 3*scale); // Back left (longer)
+            ctx.fillRect(x + 7*scale, y + 7*scale, 1*scale, 3*scale); // Back right (longer)
+            // Head
+            ctx.fillRect(x + 3*scale, y + 2*scale, 2*scale, 2*scale);
+            
+            // Antennae
+            ctx.fillStyle = '#000';
+            ctx.fillRect(x + 3*scale, y + 1*scale, 1*scale, 1*scale);
+            ctx.fillRect(x + 4*scale, y + 1*scale, 1*scale, 1*scale);
+            
+            // Party hat
+            if (hasPartyHat) {
+                ctx.fillStyle = '#FF1493'; // Pink hat
+                ctx.fillRect(x + 2*scale, y, 3*scale, 1*scale);
+                ctx.fillStyle = '#FFD700'; // Gold pom pom
+                ctx.fillRect(x + 3*scale, y - 1*scale, 1*scale, 1*scale);
+            }
+        }
+        
+        // Deer sprite with party hat
+        function drawDeer(x, y, hasPartyHat = false) {
+            const scale = PIXEL_SCALE;
+            
+            ctx.fillStyle = '#8B4513'; // Brown body
+            // Body
+            ctx.fillRect(x + 4*scale, y + 6*scale, 6*scale, 8*scale);
+            // Legs
+            ctx.fillRect(x + 2*scale, y + 12*scale, 2*scale, 4*scale); // Front left
+            ctx.fillRect(x + 8*scale, y + 12*scale, 2*scale, 4*scale); // Front right
+            ctx.fillRect(x + 3*scale, y + 14*scale, 2*scale, 4*scale); // Back left
+            ctx.fillRect(x + 9*scale, y + 14*scale, 2*scale, 4*scale); // Back right
+            // Neck
+            ctx.fillRect(x + 3*scale, y + 4*scale, 4*scale, 4*scale);
+            
+            // Head
+            ctx.fillRect(x + 2*scale, y + 2*scale, 3*scale, 4*scale);
+            
+            // Antlers
+            ctx.fillStyle = '#5D4037'; // Darker brown for antlers
+            ctx.fillRect(x, y, 2*scale, 2*scale);
+            ctx.fillRect(x + 5*scale, y, 2*scale, 2*scale);
+            ctx.fillRect(x - 1*scale, y + 1*scale, 1*scale, 1*scale); // Antler branch
+            ctx.fillRect(x + 6*scale, y + 1*scale, 1*scale, 1*scale); // Antler branch
+            
+            // Party hat
+            if (hasPartyHat) {
+                ctx.fillStyle = '#FF1493';
+                ctx.fillRect(x + 1*scale, y - 2*scale, 5*scale, 2*scale);
+                ctx.fillStyle = '#FFD700';
+                ctx.fillRect(x + 3*scale, y - 3*scale, 1*scale, 1*scale);
+            }
+        }
+        
+        // Horse sprite with party hat
+        function drawHorse(x, y, hasPartyHat = false) {
+            const scale = PIXEL_SCALE;
+            
+            ctx.fillStyle = '#A0522D'; // Sienna/brown body
+            // Body
+            ctx.fillRect(x + 4*scale, y + 6*scale, 8*scale, 6*scale);
+            // Legs
+            ctx.fillRect(x + 3*scale, y + 12*scale, 2*scale, 4*scale); // Front left
+            ctx.fillRect(x + 9*scale, y + 12*scale, 2*scale, 4*scale); // Front right
+            ctx.fillRect(x + 4*scale, y + 14*scale, 2*scale, 4*scale); // Back left
+            ctx.fillRect(x + 10*scale, y + 14*scale, 2*scale, 4*scale); // Back right
+            
+            // Neck & head
+            ctx.fillRect(x + 2*scale, y + 4*scale, 4*scale, 8*scale);
+            ctx.fillRect(x, y + 6*scale, 2*scale, 4*scale);
+            
+            // Mane
+            ctx.fillStyle = '#000'; // Black mane
+            ctx.fillRect(x + 2*scale, y + 4*scale, 2*scale, 2*scale);
+            ctx.fillRect(x + 1*scale, y + 5*scale, 1*scale, 3*scale); // Mane extends down neck
+            
+            // Party hat
+            if (hasPartyHat) {
+                ctx.fillStyle = '#FF1493';
+                ctx.fillRect(x, y, 2*scale, 4*scale);
+                ctx.fillStyle = '#FFD700';
+                ctx.fillRect(x, y - 1*scale, 2*scale, 1*scale);
+            }
+        }
+        
+        // Bear sprite with party hat
+        function drawBear(x, y, hasPartyHat = false) {
+            const scale = PIXEL_SCALE;
+            
+            ctx.fillStyle = '#654321'; // Brown bear
+            // Body
+            ctx.fillRect(x + 3*scale, y + 6*scale, 8*scale, 8*scale);
+            
+            // Legs
+            ctx.fillRect(x + 2*scale, y + 14*scale, 2*scale, 4*scale); // Front left
+            ctx.fillRect(x + 9*scale, y + 14*scale, 2*scale, 4*scale); // Front right
+            ctx.fillRect(x + 3*scale, y + 16*scale, 2*scale, 4*scale); // Back left
+            ctx.fillRect(x + 10*scale, y + 16*scale, 2*scale, 4*scale); // Back right
+            
+            // Head
+            ctx.fillRect(x + 4*scale, y + 2*scale, 6*scale, 4*scale);
+            
+            // Ears
+            ctx.fillRect(x + 3*scale, y + 1*scale, 2*scale, 2*scale);
+            ctx.fillRect(x + 9*scale, y + 1*scale, 2*scale, 2*scale);
+            
+            // Eyes
+            ctx.fillStyle = '#000';
+            ctx.fillRect(x + 5*scale, y + 4*scale, 1*scale, 1*scale);
+            ctx.fillRect(x + 8*scale, y + 4*scale, 1*scale, 1*scale);
+            
+            // Nose
+            ctx.fillRect(x + 6*scale, y + 5*scale, 2*scale, 1*scale);
+            
+            // Party hat
+            if (hasPartyHat) {
+                ctx.fillStyle = '#FF1493';
+                ctx.fillRect(x + 6*scale, y, 2*scale, 2*scale);
+                ctx.fillStyle = '#FFD700';
+                ctx.fillRect(x + 6*scale, y - 1*scale, 2*scale, 1*scale);
+            }
+        }
+        
+        // Enhanced environment rendering
+        function drawEnvironment() {
+            const step = gameSteps[currentStep] || gameSteps[gameSteps.length - 1];
+            
+            // Sky gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, step.skyColor.top);
+            gradient.addColorStop(1, step.skyColor.bottom);
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Ground
+            if (step.lakeVisible) {
+                // Lake on the right third, trail on the left two-thirds
+                ctx.fillStyle = '#8B4513'; // Trail color
+                ctx.fillRect(0, canvas.height - 100, canvas.width * 2/3, 100);
                 
-                this.steps = [
-                    {
-                        position: 50,
-                        text: "Hello my love, what better way to celebrate your birthday than to take a little hike?",
-                        sound: 'tree',
-                        skyClass: '',
-                        treeCount: 8,
-                        bushCount: 0,
-                        flowerCount: 0,
-                        mushroomCount: 0
-                    },
-                    {
-                        position: 200,
-                        text: "You step deeper into the woods. The Iroko trees whisper happy birthday wishes as you pass by their ancient trunks.",
-                        sound: 'tree',
-                        skyClass: 'sunset-1',
-                        treeCount: 12,
-                        bushCount: 3,
-                        flowerCount: 2,
-                        mushroomCount: 0
-                    },
-                    {
-                        position: 350,
-                        text: "It's getting late, the sun is setting. Can you hear the crickets starting their birthday serenade?",
-                        sound: 'cricket',
-                        skyClass: 'sunset-2',
-                        treeCount: 15,
-                        bushCount: 5,
-                        flowerCount: 4,
-                        mushroomCount: 1
-                    },
-                    {
-                        position: 500,
-                        text: "The frogs are joining in! Can you hear them sing?",
-                        sound: 'frog',
-                        skyClass: 'sunset-3',
-                        treeCount: 18,
-                        bushCount: 7,
-                        flowerCount: 6,
-                        mushroomCount: 3
-                    },
-                    {
-                        position: 650,
-                        text: "Deeper in now, It's just you and the wind. It spurs you forward.",
-                        sound: 'wind',
-                        skyClass: 'sunset-4',
-                        treeCount: 20,
-                        bushCount: 8,
-                        flowerCount: 8,
-                        mushroomCount: 4
-                    },
-                    {
-                        position: 800,
-                        text: "You're so close Ife mi, the gurgling of the lake tells you you're in the right place.",
-                        sound: 'lake',
-                        skyClass: 'dusk',
-                        treeCount: 22,
-                        bushCount: 10,
-                        flowerCount: 10,
-                        mushroomCount: 6
-                    },
-                    {
-                        position: 950,
-                        text: "You've arrived at the most beautiful moonlit lake! The perfect spot for a birthday surprise. Click once more...",
-                        sound: 'lake',
-                        skyClass: 'night-sky',
-                        treeCount: 25,
-                        bushCount: 12,
-                        flowerCount: 12,
-                        mushroomCount: 8,
-                        final: true
+                ctx.fillStyle = '#4682B4'; // Lake color
+                ctx.fillRect(canvas.width * 2/3, canvas.height - 100, canvas.width * 1/3, 100);
+            } else {
+                ctx.fillStyle = '#8B4513'; // Regular trail
+                ctx.fillRect(0, canvas.height - 100, canvas.width, 100);
+            }
+            
+            // Trees (progressively more foresty)
+            ctx.fillStyle = '#654321'; // Brown trunks
+            for (let i = 0; i < step.treeCount; i++) {
+                const x = (i * 40 + 30 + Math.sin(i) * 20) % (canvas.width + 40) - 20;
+                const height = 80 + Math.sin(i * 0.5) * 30;
+                const width = 15 + Math.sin(i * 0.3) * 5;
+                
+                // Skip trees that would be in the lake area
+                if (step.lakeVisible && x > canvas.width * 2/3 - 20) continue;
+                
+                // Tree trunk
+                ctx.fillRect(x, canvas.height - 100 - height, width, height);
+                
+                // Tree leaves/foliage
+                ctx.fillStyle = currentStep < 3 ? '#228B22' : '#1F4F1F'; // Darker green as evening approaches
+                const foliageWidth = width * 3;
+                const foliageHeight = 40 + Math.sin(i * 0.7) * 15;
+                ctx.fillRect(x - foliageWidth/2 + width/2, canvas.height - 100 - height - foliageHeight, foliageWidth, foliageHeight);
+                
+                ctx.fillStyle = '#654321'; // Reset to brown for next trunk
+            }
+            
+            // Sun (gradually sets)
+            if (step.sunPosition) {
+                const sunGradient = ctx.createRadialGradient(
+                    step.sunPosition.x, step.sunPosition.y, 0,
+                    step.sunPosition.x, step.sunPosition.y, 50
+                );
+                sunGradient.addColorStop(0, '#FFD700');
+                sunGradient.addColorStop(0.3, '#FFA500');
+                sunGradient.addColorStop(1, 'rgba(255,165,0,0)');
+                
+                ctx.fillStyle = sunGradient;
+                ctx.beginPath();
+                ctx.arc(step.sunPosition.x, step.sunPosition.y, 50, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+            
+            // Moon (gradually appears)
+            if (step.moonPosition) {
+                const moonGradient = ctx.createRadialGradient(
+                    step.moonPosition.x, step.moonPosition.y, 0, 
+                    step.moonPosition.x, step.moonPosition.y, 45
+                );
+                moonGradient.addColorStop(0, `rgba(255,250,240,${step.moonPosition.opacity})`);
+                moonGradient.addColorStop(0.7, `rgba(245,245,220,${step.moonPosition.opacity * 0.8})`);
+                moonGradient.addColorStop(1, `rgba(245,245,220,${step.moonPosition.opacity * 0.3})`);
+                
+                ctx.fillStyle = moonGradient;
+                ctx.beginPath();
+                ctx.arc(step.moonPosition.x, step.moonPosition.y, 45, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                // Moon craters (only visible when moon is more opaque)
+                if (step.moonPosition.opacity > 0.5) {
+                    ctx.fillStyle = `rgba(230,230,250,${step.moonPosition.opacity * 0.6})`;
+                    ctx.beginPath();
+                    ctx.arc(step.moonPosition.x - 10, step.moonPosition.y - 10, 8, 0, 2 * Math.PI);
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.arc(step.moonPosition.x + 10, step.moonPosition.y + 5, 6, 0, 2 * Math.PI);
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.arc(step.moonPosition.x + 5, step.moonPosition.y - 5, 4, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+            }
+            
+            // Lake with moon reflection
+            if (step.lakeVisible) {
+                // Lake surface
+                ctx.fillStyle = '#4682B4';
+                ctx.fillRect(canvas.width * 2/3, canvas.height - 100, canvas.width * 1/3, 100);
+                
+                // Lake edge/shore
+                ctx.fillStyle = '#8B4513';
+                ctx.fillRect(canvas.width * 2/3 - 10, canvas.height - 105, 10, 105);
+                
+                // Moon reflection (enhanced)
+                if (step.moonPosition && step.moonPosition.opacity > 0.8) {
+                    const reflectionX = canvas.width * 2/3 + 50;
+                    const reflectionY = canvas.height - 60;
+                    
+                    // Main reflection
+                    ctx.fillStyle = 'rgba(255,250,240,0.7)';
+                    ctx.fillRect(reflectionX, reflectionY, 40, 35);
+                    
+                    // Brighter center
+                    ctx.fillStyle = 'rgba(255,250,240,0.9)';
+                    ctx.fillRect(reflectionX + 5, reflectionY + 5, 30, 25);
+                    
+                    // Shimmer effect
+                    for (let i = 0; i < 8; i++) {
+                        const shimmerOpacity = 0.3 + Math.sin(Date.now() * 0.01 + i) * 0.2;
+                        ctx.fillStyle = `rgba(255,250,240,${shimmerOpacity})`;
+                        const shimmerX = reflectionX + i * 5;
+                        const shimmerY = reflectionY + Math.sin(Date.now() * 0.008 + i) * 4;
+                        ctx.fillRect(shimmerX, shimmerY, 5, 3);
                     }
-                ];
-                
-                this.init();
-            }
-            
-            init() {
-                this.createInitialTrees();
-                this.createStars();
-                this.createBushes();
-                this.createFlowers();
-                this.createMushrooms();
-                
-                // Initialize audio on first button click
-                this.nextButton.addEventListener('click', () => {
-                    if (!this.audioContext) {
-                        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                        this.startAmbientSound();
-                    }
-                    this.nextStep();
-                });
-                
-                this.showBlurb(this.steps[0].text);
-            }
-            
-            startAmbientSound() {
-                if (!this.audioContext) return;
-                
-                // Create ambient forest sound
-                const bufferSize = this.audioContext.sampleRate * 4;
-                const buffer = this.audioContext.createBuffer(1, bufferSize, this.audioContext.sampleRate);
-                const data = buffer.getChannelData(0);
-                
-                // Generate soft pink noise for forest ambience
-                let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
-                for (let i = 0; i < bufferSize; i++) {
-                    const white = Math.random() * 2 - 1;
-                    b0 = 0.99886 * b0 + white * 0.0555179;
-                    b1 = 0.99332 * b1 + white * 0.0750759;
-                    b2 = 0.96900 * b2 + white * 0.1538520;
-                    b3 = 0.86650 * b3 + white * 0.3104856;
-                    b4 = 0.55000 * b4 + white * 0.5329522;
-                    b5 = -0.7616 * b5 - white * 0.0168980;
-                    data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.05;
-                    b6 = white * 0.115926;
-                }
-                
-                const source = this.audioContext.createBufferSource();
-                source.buffer = buffer;
-                source.loop = true;
-                
-                const filter = this.audioContext.createBiquadFilter();
-                filter.type = 'lowpass';
-                filter.frequency.setValueAtTime(300, this.audioContext.currentTime);
-                
-                this.ambientGain = this.audioContext.createGain();
-                this.ambientGain.gain.setValueAtTime(0.02, this.audioContext.currentTime);
-                
-                source.connect(filter);
-                filter.connect(this.ambientGain);
-                this.ambientGain.connect(this.audioContext.destination);
-                
-                source.start();
-            }
-            
-            createInitialTrees() {
-                const treesContainer = document.getElementById('trees');
-                treesContainer.innerHTML = '';
-                
-                for (let i = 0; i < 8; i++) {
-                    const tree = document.createElement('div');
-                    tree.className = 'tree';
-                    tree.style.left = Math.random() * 100 + '%';
-                    tree.style.transform = `scale(${0.5 + Math.random() * 0.8})`;
-                    treesContainer.appendChild(tree);
-                }
-            }
-            
-            updateForestDensity(step) {
-                this.updateTrees(step.treeCount);
-                this.updateBushes(step.bushCount);
-                this.updateFlowers(step.flowerCount);
-                this.updateMushrooms(step.mushroomCount);
-            }
-            
-            updateTrees(count) {
-                const treesContainer = document.getElementById('trees');
-                const currentTrees = treesContainer.children.length;
-                
-                if (count > currentTrees) {
-                    for (let i = currentTrees; i < count; i++) {
-                        const tree = document.createElement('div');
-                        const size = Math.random();
-                        if (size > 0.7) {
-                            tree.className = 'tree large';
-                        } else if (size > 0.4) {
-                            tree.className = 'tree medium';
-                        } else {
-                            tree.className = 'tree';
-                        }
-                        tree.style.left = Math.random() * 100 + '%';
-                        tree.style.transform = `scale(${0.6 + Math.random() * 0.9})`;
-                        tree.style.zIndex = Math.floor(Math.random() * 5);
-                        treesContainer.appendChild(tree);
+                    
+                    // Ripple effects
+                    for (let i = 0; i < 3; i++) {
+                        const rippleOpacity = 0.1 + Math.sin(Date.now() * 0.005 + i * 2) * 0.05;
+                        ctx.fillStyle = `rgba(255,250,240,${rippleOpacity})`;
+                        const rippleY = reflectionY + 40 + i * 8;
+                        ctx.fillRect(reflectionX - 10, rippleY, 60, 2);
                     }
                 }
             }
+        }
+        
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawEnvironment();
             
-            createBushes() {
-                const bushesContainer = this.bushes;
-                for (let i = 0; i < 12; i++) {
-                    const bush = document.createElement('div');
-                    bush.className = 'bush';
-                    bush.style.left = Math.random() * 100 + '%';
-                    bush.style.transform = `scale(${0.7 + Math.random() * 0.6})`;
-                    bushesContainer.appendChild(bush);
+            const step = gameSteps[currentStep] || gameSteps[gameSteps.length - 1];
+            
+            // Character walking
+            drawCharacter(currentCharacterX, canvas.height - 150, step.showPartyAnimals);
+            
+            // Party animals at the end, moved to the left
+            if (step.showPartyAnimals) {
+                // Ensure animals are distinct from ground/trees
+                // By making them slightly brighter and adding a subtle outline if needed,
+                // and ensuring their colors contrast with the background.
+                // Their current colors (green, dark green, brown) already provide some distinction.
+                
+                drawFrog(50, canvas.height - 90, true);
+                drawCricket(150, canvas.height - 85, true);
+                drawDeer(250, canvas.height - 100, true);
+                drawHorse(350, canvas.height - 110, true);
+                drawBear(450, canvas.height - 110, true);
+            }
+        }
+        
+        function moveCharacter() {
+            if (Math.abs(currentCharacterX - targetCharacterX) > characterSpeed) {
+                if (currentCharacterX < targetCharacterX) {
+                    currentCharacterX += characterSpeed;
+                } else {
+                    currentCharacterX -= characterSpeed;
                 }
+                isMoving = true;
+                
+                // Update walk animation frame counter
+                currentWalkAnimationFrame++;
+                if (currentWalkAnimationFrame % walkFrameAnimationRate === 0) {
+                    currentWalkFrameIndex = (currentWalkFrameIndex + 1) % 4; // Assuming 4 frames in walkCycleOffsets
+                }
+                
+                requestAnimationFrame(moveCharacter);
+            } else {
+                isMoving = false;
+                currentWalkAnimationFrame = 0;
+                currentWalkFrameIndex = 0; // Reset to standing when stopped
+            }
+        }
+        
+        function nextStep() {
+            if (!isAudioInitialized) {
+                initAudio();
             }
             
-            updateBushes(count) {
-                const bushes = this.bushes.children;
-                for (let i = 0; i < Math.min(count, bushes.length); i++) {
-                    bushes[i].style.opacity = '1';
+            if (currentStep < gameSteps.length) {
+                const step = gameSteps[currentStep];
+                message.textContent = step.message;
+                
+                // Play environment-specific sound
+                step.environmentSound();
+                
+                if (currentStep === gameSteps.length - 1) {
+                    button.textContent = "🎁 Discover the Surprise";
+                } else {
+                    button.textContent = "Continue Journey →";
                 }
+                
+                // Set target position for character
+                targetCharacterX = step.characterX;
+                
+                // Start character movement animation
+                if (!isMoving) {
+                    moveCharacter();
+                }
+                
+                currentStep++;
+            } else {
+                // Show birthday card
+				if (ambientSource) {
+                ambientSource.stop();
+				}
+                document.getElementById('ui').style.display = 'none';
+                birthdayCard.style.display = 'block';
             }
-            
-            createFlowers() {
-                const flowersContainer = this.flowers;
-                const colors = ['#FF69B4', '#FF1493', '#FFB6C1', '#FFA500', '#FF
-updateFlowers(count) {
-    const flowers = this.flowers.children;
-    for (let i = 0; i < Math.min(count, flowers.length); i++) {
-        flowers[i].style.opacity = '1';
-    }
-}
-
-createMushrooms() {
-    const container = this.mushrooms;
-    for (let i = 0; i < 10; i++) {
-        const m = document.createElement('div');
-        m.className = 'mushroom';
-        m.style.left = Math.random() * 100 + '%';
-        m.style.transform = `scale(${0.6 + Math.random() * 0.4})`;
-        container.appendChild(m);
-    }
-}
-
-updateMushrooms(count) {
-    const mushrooms = this.mushrooms.children;
-    for (let i = 0; i < Math.min(count, mushrooms.length); i++) {
-        mushrooms[i].style.opacity = '1';
-    }
-}
-
-nextStep() {
-    if (this.currentStep >= this.steps.length) return;
-
-    const step = this.steps[this.currentStep];
-
-    this.character.style.left = `${step.position}px`;
-    this.background.className = `background ${step.skyClass}`;
-
-    if (step.skyClass.includes('sunset')) {
-        this.sun.classList.add('setting');
-    } else if (step.skyClass === 'dusk') {
-        this.sun.classList.add('hidden');
-        this.moon.classList.add('visible');
-        this.stars.classList.add('visible');
-        this.lake.classList.add('visible');
-        this.animals.classList.add('visible');
-    } else if (step.skyClass === 'night-sky') {
-        this.moon.classList.add('visible');
-        this.stars.classList.add('visible');
-    }
-
-    this.updateForestDensity(step);
-    this.showBlurb(step.text);
-
-    if (step.final) {
-        this.nextButton.textContent = "Open Your Surprise";
-        this.nextButton.addEventListener('click', () => {
-            this.birthdayCard.classList.add('show');
-            this.nextButton.disabled = true;
-        }, { once: true });
-    }
-
-    this.currentStep++;
-}
-
+        }
+        
+        // Event listeners
+        button.addEventListener('click', nextStep);
+        
+        // Animation loop for smooth effects
+        function animate() {
+            render();
+            requestAnimationFrame(animate);
+        }
+        
+        // Start the game
+        render();
+        animate();
+    </script>
+</body>
+</html>
