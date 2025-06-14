@@ -178,6 +178,39 @@
             margin-top: 10px;
         }
         
+        .audio-controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 30;
+            display: flex;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px solid #ff6b6b;
+        }
+        
+        .audio-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .audio-btn:hover {
+            transform: scale(1.1);
+            background: #ff5252;
+        }
+        
         @media (max-width: 850px) {
             #gameContainer {
                 width: 95vw;
@@ -214,6 +247,10 @@
             #birthdayCard p {
                 font-size: 16px;
             }
+            
+            .title h1 {
+                font-size: 28px;
+            }
         }
     </style>
 </head>
@@ -235,9 +272,14 @@
             <h1>🎉 Happy Birthday My Love! 🎉</h1>
             <p>I hope this new chapter in your life brings you lots of joy!</p>
             <p>Enjoy your day, you deserve every good thing life has to offer</p>
-            <p>Like a hike, every step with you is a surprise.</p>
+            <p>Like a hike, every step with you is an adventure.</p>
             <p>Here's to many more adventures! 💕</p>
             <p><strong>With all my love,</strong><br>Mr Thoughtful</p>
+        </div>
+        
+        <div class="audio-controls">
+            <button class="audio-btn" id="muteBtn">🔊</button>
+            <button class="audio-btn" id="testSoundBtn">▶️</button>
         </div>
     </div>
 
@@ -248,6 +290,8 @@
         const message = document.getElementById('message');
         const button = document.getElementById('continueButton');
         const birthdayCard = document.getElementById('birthdayCard');
+        const muteBtn = document.getElementById('muteBtn');
+        const testSoundBtn = document.getElementById('testSoundBtn');
         
         // Game state variables
         let currentStep = 0;
@@ -259,22 +303,8 @@
         let currentWalkFrameIndex = 0;
         const walkFrameAnimationRate = 5;
         const PIXEL_SCALE = 4;
-        
-        // Sound effects - using embedded data URIs to avoid CORS issues
-        const soundEffects = {
-            forestAmbient: "data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV",
-            leavesRustling: "data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV",
-            cricketsChirping: "data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV",
-            frogCroaking: "data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV",
-            windGust: "data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV",
-            waterLapping: "data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV"
-        };
-        
-        // Audio context and buffers
+        let isMuted = false;
         let audioContext;
-        let soundBuffers = {};
-        let ambientSource = null;
-        let isAudioInitialized = false;
         
         // Game progression data
         const gameSteps = [
@@ -336,48 +366,274 @@
         ];
         
         // Initialize audio system
-        async function initAudio() {
-            if (isAudioInitialized) return;
-            
+        function initAudio() {
             try {
                 // Create audio context
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 
-                // Load all sounds
-                for (const [name, dataUri] of Object.entries(soundEffects)) {
-                    try {
-                        const response = await fetch(dataUri);
-                        const arrayBuffer = await response.arrayBuffer();
-                        soundBuffers[name] = await audioContext.decodeAudioData(arrayBuffer);
-                    } catch (error) {
-                        console.error(`Error loading sound ${name}:`, error);
-                    }
-                }
-                
                 // Start ambient forest sound
-                playSound('forestAmbient', true);
+                playAmbientSound();
                 
-                isAudioInitialized = true;
+                // Test sound to ensure audio is working
+                playTestSound();
+                
+                // Set up mute button
+                muteBtn.addEventListener('click', toggleMute);
+                testSoundBtn.addEventListener('click', playTestSound);
+                
+                console.log("Audio system initialized");
             } catch (error) {
                 console.error("Audio initialization failed:", error);
+                message.textContent = "Note: Audio not supported in this browser, but visuals will still work!";
             }
         }
         
-        // Play a sound by name
-        function playSound(name, loop = false) {
-            if (!audioContext || !soundBuffers[name]) return null;
+        // Play ambient forest sound
+        function playAmbientSound() {
+            if (!audioContext || isMuted) return;
             
-            const source = audioContext.createBufferSource();
-            source.buffer = soundBuffers[name];
-            source.connect(audioContext.destination);
-            source.loop = loop;
-            source.start(0);
+            // Create oscillator for ambient sound
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
             
-            if (loop) {
-                ambientSource = source;
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 120;
+            
+            // Create a gentle, pulsing volume effect
+            const volumeLFO = audioContext.createOscillator();
+            volumeLFO.type = 'sine';
+            volumeLFO.frequency.value = 0.2;
+            
+            const lfoGain = audioContext.createGain();
+            lfoGain.gain.value = 0.3;
+            
+            volumeLFO.connect(lfoGain);
+            lfoGain.connect(gainNode.gain);
+            
+            gainNode.gain.value = 0.1;
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            volumeLFO.start();
+            oscillator.start();
+            
+            return oscillator;
+        }
+        
+        // Play environment-specific sound
+        function playEnvironmentSound(type) {
+            if (!audioContext || isMuted) return;
+            
+            let sound;
+            
+            switch(type) {
+                case 'leavesRustling':
+                    sound = createLeavesSound();
+                    break;
+                case 'cricketsChirping':
+                    sound = createCricketsSound();
+                    break;
+                case 'frogCroaking':
+                    sound = createFrogSound();
+                    break;
+                case 'windGust':
+                    sound = createWindSound();
+                    break;
+                case 'waterLapping':
+                    sound = createWaterSound();
+                    break;
+                default:
+                    return;
             }
             
-            return source;
+            sound.start(audioContext.currentTime);
+            return sound;
+        }
+        
+        // Create leaves rustling sound
+        function createLeavesSound() {
+            const noise = createNoiseBuffer(1.5);
+            const noiseSource = audioContext.createBufferSource();
+            noiseSource.buffer = noise;
+            
+            const filter = audioContext.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.value = 2000;
+            filter.Q.value = 1.0;
+            
+            const gainNode = audioContext.createGain();
+            gainNode.gain.value = 0.3;
+            
+            noiseSource.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            return noiseSource;
+        }
+        
+        // Create crickets chirping sound
+        function createCricketsSound() {
+            const oscillator = audioContext.createOscillator();
+            oscillator.type = 'sawtooth';
+            oscillator.frequency.value = 4000;
+            
+            const gainNode = audioContext.createGain();
+            gainNode.gain.value = 0.2;
+            
+            // Create a chirping effect
+            const chirpEnvelope = audioContext.createGain();
+            chirpEnvelope.gain.value = 0;
+            
+            // Chirp pattern
+            const chirpTimes = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9];
+            chirpTimes.forEach((time, i) => {
+                chirpEnvelope.gain.setValueAtTime(0, audioContext.currentTime + time);
+                chirpEnvelope.gain.setValueAtTime(0.3, audioContext.currentTime + time + 0.02);
+                chirpEnvelope.gain.setValueAtTime(0, audioContext.currentTime + time + 0.05);
+            });
+            
+            oscillator.connect(chirpEnvelope);
+            chirpEnvelope.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            return oscillator;
+        }
+        
+        // Create frog croaking sound
+        function createFrogSound() {
+            const oscillator = audioContext.createOscillator();
+            oscillator.type = 'sine';
+            
+            // Frog croak frequency pattern
+            oscillator.frequency.setValueAtTime(100, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(80, audioContext.currentTime + 0.1);
+            oscillator.frequency.exponentialRampToValueAtTime(60, audioContext.currentTime + 0.2);
+            
+            const gainNode = audioContext.createGain();
+            gainNode.gain.value = 0.3;
+            
+            // Volume envelope
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.4, audioContext.currentTime + 0.1);
+            gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.3);
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            return oscillator;
+        }
+        
+        // Create wind gust sound
+        function createWindSound() {
+            const noise = createNoiseBuffer(3.0);
+            const noiseSource = audioContext.createBufferSource();
+            noiseSource.buffer = noise;
+            
+            const filter = audioContext.createBiquadFilter();
+            filter.type = 'highpass';
+            filter.frequency.value = 300;
+            
+            const gainNode = audioContext.createGain();
+            gainNode.gain.value = 0.3;
+            
+            // Volume envelope for wind gust
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.4, audioContext.currentTime + 1.0);
+            gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 2.0);
+            gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 3.0);
+            
+            noiseSource.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            return noiseSource;
+        }
+        
+        // Create water lapping sound
+        function createWaterSound() {
+            const noise = createNoiseBuffer(2.0);
+            const noiseSource = audioContext.createBufferSource();
+            noiseSource.buffer = noise;
+            
+            const filter = audioContext.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 800;
+            
+            const gainNode = audioContext.createGain();
+            gainNode.gain.value = 0.3;
+            
+            // Create a lapping effect
+            const lapEnvelope = audioContext.createGain();
+            lapEnvelope.gain.value = 0;
+            
+            // Lapping pattern
+            for(let i = 0; i < 5; i++) {
+                const startTime = audioContext.currentTime + i * 0.4;
+                lapEnvelope.gain.setValueAtTime(0, startTime);
+                lapEnvelope.gain.linearRampToValueAtTime(0.4, startTime + 0.1);
+                lapEnvelope.gain.linearRampToValueAtTime(0, startTime + 0.3);
+            }
+            
+            noiseSource.connect(filter);
+            filter.connect(lapEnvelope);
+            lapEnvelope.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            return noiseSource;
+        }
+        
+        // Create a noise buffer
+        function createNoiseBuffer(duration) {
+            const sampleRate = audioContext.sampleRate;
+            const frameCount = Math.floor(sampleRate * duration);
+            const buffer = audioContext.createBuffer(1, frameCount, sampleRate);
+            const data = buffer.getChannelData(0);
+            
+            for (let i = 0; i < frameCount; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+            
+            return buffer;
+        }
+        
+        // Play test sound
+        function playTestSound() {
+            if (!audioContext) {
+                message.textContent = "Audio not supported in this browser, but visuals will still work!";
+                return;
+            }
+            
+            const oscillator = audioContext.createOscillator();
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 440;
+            
+            const gainNode = audioContext.createGain();
+            gainNode.gain.value = 0.2;
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.1);
+        }
+        
+        // Toggle mute
+        function toggleMute() {
+            isMuted = !isMuted;
+            muteBtn.textContent = isMuted ? "🔇" : "🔊";
+            
+            if (isMuted) {
+                // If muted, we need to stop all sounds
+                // In a real app, we might store all playing sounds to stop them
+                if (audioContext) {
+                    audioContext.suspend();
+                }
+            } else {
+                if (audioContext) {
+                    audioContext.resume();
+                    playTestSound();
+                }
+            }
         }
         
         // Character drawing with animation
@@ -721,7 +977,7 @@
         
         // Progress to next step
         function nextStep() {
-            if (!isAudioInitialized) {
+            if (!audioContext) {
                 initAudio();
             }
             
@@ -730,7 +986,7 @@
                 message.textContent = step.message;
                 
                 // Play environment sound
-                playSound(step.environmentSound);
+                playEnvironmentSound(step.environmentSound);
                 
                 if (currentStep === gameSteps.length - 1) {
                     button.textContent = "🎁 Discover the Surprise";
@@ -746,11 +1002,53 @@
                 
                 currentStep++;
             } else {
-                if (ambientSource) {
-                    ambientSource.stop();
-                }
                 document.getElementById('ui').style.display = 'none';
                 birthdayCard.style.display = 'block';
+                
+                // Play happy birthday sound
+                playHappyBirthday();
+            }
+        }
+        
+        // Play happy birthday song
+        function playHappyBirthday() {
+            if (!audioContext || isMuted) return;
+            
+            // Define note frequencies
+            const notes = [
+                392, 392, 440, 392, 523, 494,
+                392, 392, 440, 392, 587, 523,
+                392, 392, 784, 659, 523, 494, 440,
+                698, 698, 659, 523, 587, 523
+            ];
+            
+            // Define note durations
+            const durations = [
+                0.5, 0.5, 1, 1, 1, 2,
+                0.5, 0.5, 1, 1, 1, 2,
+                0.5, 0.5, 1, 1, 1, 1, 3,
+                0.5, 0.5, 1, 1, 1, 2
+            ];
+            
+            let currentTime = audioContext.currentTime;
+            
+            for (let i = 0; i < notes.length; i++) {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.value = notes[i];
+                
+                gainNode.gain.setValueAtTime(0.3, currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, currentTime + durations[i] * 0.9);
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.start(currentTime);
+                oscillator.stop(currentTime + durations[i]);
+                
+                currentTime += durations[i] * 0.9;
             }
         }
         
@@ -764,6 +1062,7 @@
         }
         
         // Start the game
+        initAudio();
         render();
         animate();
     </script>
