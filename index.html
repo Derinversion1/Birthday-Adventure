@@ -1009,7 +1009,9 @@
             if (!audioContext) {
                 initAudio();
             }
-            
+             if (currentStep === 0) {
+                document.querySelector('.title').style.display = 'none';
+            }
             if (currentStep < gameSteps.length) {
                 const step = gameSteps[currentStep];
                 message.textContent = step.message;
