@@ -3,11 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Temi's Birthday Hike</title>
+    <title>Temi's Birthday Hike Adventure</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
             background: #000;
             font-family: 'Courier New', monospace;
             overflow: hidden;
@@ -15,6 +19,16 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            color: white;
+            background: linear-gradient(to bottom, #1a2a6c, #b21f1f, #1a2a6c);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         
         #gameContainer {
@@ -23,6 +37,9 @@
             height: 600px;
             border: 4px solid #fff;
             background: #000;
+            box-shadow: 0 0 30px rgba(255, 105, 180, 0.7);
+            border-radius: 10px;
+            overflow: hidden;
         }
         
         #gameCanvas {
@@ -44,7 +61,7 @@
         }
         
         #message {
-            background: rgba(0,0,0,0.9);
+            background: rgba(0, 0, 0, 0.85);
             color: #fff;
             padding: 20px 30px;
             border-radius: 15px;
@@ -52,8 +69,9 @@
             font-size: 18px;
             max-width: 500px;
             border: 3px solid #fff;
-            box-shadow: 0 0 20px rgba(255,255,255,0.3);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
             line-height: 1.4;
+            backdrop-filter: blur(5px);
         }
         
         #continueButton {
@@ -68,13 +86,15 @@
             font-weight: bold;
             transition: all 0.3s ease;
             border: 3px solid #fff;
-            box-shadow: 0 5px 15px rgba(255,107,107,0.4);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+            display: block;
+            margin: 0 auto;
         }
         
         #continueButton:hover {
             background: linear-gradient(45deg, #ff5252, #ff7979);
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(255,107,107,0.6);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.6);
         }
         
         #birthdayCard {
@@ -87,11 +107,12 @@
             padding: 50px;
             border-radius: 25px;
             text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
             border: 5px solid #fff;
             max-width: 450px;
             animation: cardAppear 1.5s ease-out;
             z-index: 20;
+            width: 80%;
         }
         
         @keyframes cardAppear {
@@ -112,7 +133,7 @@
             color: #fff;
             font-size: 32px;
             margin-bottom: 25px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
             animation: bounce 2s infinite;
         }
         
@@ -133,11 +154,75 @@
             font-size: 18px;
             line-height: 1.6;
             margin-bottom: 15px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        
+        .title {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            border: 2px solid #ff6b6b;
+        }
+        
+        .title h1 {
+            color: #ff6b6b;
+            font-size: 36px;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.7);
+        }
+        
+        .title p {
+            color: #fff;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 850px) {
+            #gameContainer {
+                width: 95vw;
+                height: 70vh;
+            }
+            
+            #gameCanvas {
+                width: 100%;
+                height: 100%;
+            }
+            
+            #ui {
+                max-width: 80%;
+            }
+            
+            #message {
+                font-size: 16px;
+                padding: 15px;
+            }
+            
+            #continueButton {
+                padding: 12px 20px;
+                font-size: 16px;
+            }
+            
+            #birthdayCard {
+                padding: 30px;
+            }
+            
+            #birthdayCard h1 {
+                font-size: 28px;
+            }
+            
+            #birthdayCard p {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="title">
+        <h1>🎂 Temi's Birthday Hike Adventure 🎂</h1>
+        <p>A special journey created just for you!</p>
+    </div>
+    
     <div id="gameContainer">
         <canvas id="gameCanvas" width="800" height="600"></canvas>
         
@@ -150,82 +235,64 @@
             <h1>🎉 Happy Birthday My Love! 🎉</h1>
             <p>I hope this new chapter in your life brings you lots of joy!</p>
             <p>Enjoy your day, you deserve every good thing life has to offer</p>
-			<p>Like a hike, every step with you is an adventure.</p>
+            <p>Like a hike, every step with you is an adventure.</p>
             <p>Here's to many more adventures! 💕</p>
             <p><strong>With all my love,</strong><br>Mr Thoughtful</p>
         </div>
     </div>
 
     <script>
+        // Game state and configuration
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const message = document.getElementById('message');
         const button = document.getElementById('continueButton');
         const birthdayCard = document.getElementById('birthdayCard');
-		let soundBuffers = {}; 
-        let ambientSource = null; 
-
-        async function loadSound(name, url) {
-            if (!audioContext) initAudio(); // Ensure context is ready
-            try {
-                const response = await fetch(url);
-                const arrayBuffer = await response.arrayBuffer();
-                soundBuffers[name] = await audioContext.decodeAudioData(arrayBuffer);
-                console.log(`Loaded sound: ${name}`);
-            } catch (error) {
-                console.error(`Error loading sound ${name} from ${url}:`, error);
-            }
-        }
-
-        // Plays a loaded sound by name
-        function playSound(name, loop = false) {
-            if (!audioContext || !soundBuffers[name]) {
-                console.warn(`Sound "${name}" not loaded or audioContext not ready.`);
-                return null;
-            }
-
-            // Create a new source node each time a sound is played
-            const source = audioContext.createBufferSource();
-            source.buffer = soundBuffers[name];
-            source.connect(ambientGain); // Connect to ambientGain for overall volume control
-            source.loop = loop;
-            source.start(0);
-            return source; // Return the source node for potential stopping later
-        }
         
+        // Game state variables
         let currentStep = 0;
-        let audioContext;
-        let ambientGain;
-        let isAudioInitialized = false;
         let targetCharacterX = 100;
         let currentCharacterX = 100;
         const characterSpeed = 2;
         let isMoving = false;
-        
-        let currentWalkAnimationFrame = 0; // This will count up continuously
-        let currentWalkFrameIndex = 0; // This will index into walkCycleOffsets
-        const walkFrameAnimationRate = 5; // How many animation frames pass before changing walk sprite frame
-
-        // Pixel scale for crisp rendering
+        let currentWalkAnimationFrame = 0;
+        let currentWalkFrameIndex = 0;
+        const walkFrameAnimationRate = 5;
         const PIXEL_SCALE = 4;
+        
+        // Sound effects - using embedded data URIs to avoid CORS issues
+        const soundEffects = {
+            forestAmbient: "data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV",
+            leavesRustling: "data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV",
+            cricketsChirping: "data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV",
+            frogCroaking: "data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV",
+            windGust: "data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV",
+            waterLapping: "data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV"
+        };
+        
+        // Audio context and buffers
+        let audioContext;
+        let soundBuffers = {};
+        let ambientSource = null;
+        let isAudioInitialized = false;
         
         // Game progression data
         const gameSteps = [
             {
-                message: "🌲 You step deeper into the woods. The Iroko trees whisper happy birthday wishes as you pass by their ancient trunks.",
-                environmentSound: () => playSound('leavesRustling'),
-                skyColor: { top: '#87CEEB', bottom: '#98FB98' }, // Bright day
+                message: "🌲 You step deeper into the woods. The trees whisper happy birthday wishes as you pass by their ancient trunks.",
+                environmentSound: 'leavesRustling',
+                skyColor: { top: '#87CEEB', bottom: '#98FB98' },
                 treeCount: 8,
                 sunPosition: { x: 650, y: 80 },
-                moonPosition: null, // No moon at this step
+                moonPosition: null,
                 characterX: 100,
                 showPartyAnimals: false,
                 lakeVisible: false
             },
             {
                 message: "🦗 It's getting late, the sun is setting. Can you hear the crickets starting their birthday serenade?",
-                environmentSound: () => playSound('cricketsChirping'),
-                skyColor: { top: '#FFB347', bottom: '#FFA07A' }, // Golden hour
+                environmentSound: 'cricketsChirping',
+                skyColor: { top: '#FFB347', bottom: '#FFA07A' },
                 treeCount: 12,
                 sunPosition: { x: 600, y: 100 },
                 moonPosition: { x: 720, y: 60, opacity: 0.1 },
@@ -234,9 +301,9 @@
                 lakeVisible: false
             },
             {
-                message: "� A family of friendly frogs greets you! They croak excitedly",
-                environmentSound: () => playSound('frogCroaking'),
-                skyColor: { top: '#FF7F50', bottom: '#FF6347' }, // Sunset
+                message: "🐸 A family of friendly frogs greets you! They croak excitedly",
+                environmentSound: 'frogCroaking',
+                skyColor: { top: '#FF7F50', bottom: '#FF6347' },
                 treeCount: 16,
                 sunPosition: { x: 550, y: 140 },
                 moonPosition: { x: 720, y: 70, opacity: 0.3 },
@@ -246,8 +313,8 @@
             },
             {
                 message: "💨 Deeper in now, It's just you and the wind. It spurs you forward.",
-                environmentSound: () => playSound('windGust'),
-                skyColor: { top: '#4169E1', bottom: '#6A5ACD' }, // Dusk
+                environmentSound: 'windGust',
+                skyColor: { top: '#4169E1', bottom: '#6A5ACD' },
                 treeCount: 20,
                 sunPosition: { x: 500, y: 200 },
                 moonPosition: { x: 700, y: 80, opacity: 0.7 },
@@ -257,176 +324,99 @@
             },
             {
                 message: "🌙 The gurgling of the lake tells you you're in the right place. The enchanted moonlit lake sparkles before you like a field of diamonds. It looks like all the animals came to celebrate you!",
-                environmentSound: () => playSound('waterLapping'),
-                skyColor: { top: '#191970', bottom: '#483D8B' }, // Night
+                environmentSound: 'waterLapping',
+                skyColor: { top: '#191970', bottom: '#483D8B' },
                 treeCount: 24,
                 sunPosition: null,
-                moonPosition: { x: 700, y: 80, opacity: 1.0 }, // Full moon only here
+                moonPosition: { x: 700, y: 80, opacity: 1.0 },
                 lakeVisible: true,
-                showPartyAnimals: true, // Animals appear here (penultimate slide)
+                showPartyAnimals: true,
                 characterX: 500
             }
         ];
         
         // Initialize audio system
-        function initAudio() {
-            await loadSound('forestAmbient', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'); // General forest ambiance
-            await loadSound('leavesRustling', 'https://www.soundjay.com/nature/leaves-rustling-1.mp3');
-            await loadSound('cricketsChirping', 'https://www.soundjay.com/nature/crickets-chirping-1.mp3');
-            await loadSound('frogCroaking', 'https://www.soundjay.com/nature/frog-croaking-1.mp3');
-            await loadSound('windGust', 'https://www.soundjay.com/nature/wind-2.mp3'); // Another wind sound
-            await loadSound('waterLapping', 'https://www.soundjay.com/nature/water-lapping-1.mp3');
-			ambientSource = playSound('forestAmbient', true); // Play on loop
+        async function initAudio() {
             if (isAudioInitialized) return;
             
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            
-            // Create ambient sound system
-            ambientGain = audioContext.createGain();
-            ambientGain.connect(audioContext.destination);
-            ambientGain.gain.value = 0.1;
-            
-            startAmbientForestSounds();
-            isAudioInitialized = true;
-        }
-        
-        // Ambient forest sounds that play continuously
-        function startAmbientForestSounds() {
-           
-        }
-        
- 
-        
-        // Specific environment sounds
-        function playTreeSounds() {
-            // Wind through trees - layered sounds
-            for(let i = 0; i < 8; i++) {
-                setTimeout(() => {
-                    createNoise(1.5, 0.1, 100, 500); // Broader wind sound
-                }, i * 150);
-            }
-        }
-        
-        function playCricketSounds() {
-            // Realistic cricket chirps (short, high-frequency bursts with a quick decay)
-            for(let i = 0; i < 12; i++) {
-                setTimeout(() => {
-                    const freq = 4000 + Math.random() * 1000;
-                    const duration = 0.08 + Math.random() * 0.05;
-                    const oscillator = audioContext.createOscillator();
-                    const gainNode = audioContext.createGain();
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-                    
-                    oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
-                    oscillator.type = 'square'; // Buzzier sound
-                    
-                    gainNode.gain.setValueAtTime(0.25, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + duration);
-                    
-                    oscillator.start();
-                    oscillator.stop(audioContext.currentTime + duration);
-                }, i * (150 + Math.random() * 100)); // Vary timing for more natural feel
-            }
-        }
-        
-        function playFrogSounds() {
-            // Realistic frog croaks (low frequency, guttural sounds)
-            const frogCroaks = [
-                { freq: 80, duration: 0.6, type: 'sawtooth' },
-                { freq: 110, duration: 0.5, type: 'square' },
-                { freq: 95, duration: 0.7, type: 'triangle' },
-                { freq: 130, duration: 0.4, type: 'sine' }
-            ];
-            
-            frogCroaks.forEach((sound, i) => {
-                setTimeout(() => {
-                    const oscillator = audioContext.createOscillator();
-                    const gainNode = audioContext.createGain();
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-                    
-                    oscillator.frequency.setValueAtTime(sound.freq, audioContext.currentTime);
-                    oscillator.type = sound.type;
-                    
-                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + sound.duration);
-                    
-                    oscillator.start();
-                    oscillator.stop(audioContext.currentTime + sound.duration);
-                    
-                    // Add a subtle noise element for more realism
-                    createNoise(sound.duration * 0.8, 0.05, 50, 300);
-                }, i * (400 + Math.random() * 200)); // Vary timing
-            });
-        }
-        
-        function playWindSounds() {
-            // Strong mountain wind
-            for(let i = 0; i < 15; i++) {
-                setTimeout(() => {
-                    createNoise(2.0, 0.15, 50, 400); // Stronger, broader band noise
-                }, i * 100);
-            }
-        }
-        
-        function playLakeAndGurgleSounds() {
-            // Gentle water lapping (more noise-based with low frequencies)
-            for(let i = 0; i < 10; i++) {
-                setTimeout(() => {
-                    createNoise(1.5, 0.1, 20, 100);
-                }, i * 300);
-            }
-            
-            // Water gurgling sounds (bursts of noise with higher frequencies)
-            setTimeout(() => {
-                for(let i = 0; i < 8; i++) {
-                    setTimeout(() => {
-                        createNoise(0.5, 0.1, 200, 800);
-                    }, i * 400);
+            try {
+                // Create audio context
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Load all sounds
+                for (const [name, dataUri] of Object.entries(soundEffects)) {
+                    try {
+                        const response = await fetch(dataUri);
+                        const arrayBuffer = await response.arrayBuffer();
+                        soundBuffers[name] = await audioContext.decodeAudioData(arrayBuffer);
+                    } catch (error) {
+                        console.error(`Error loading sound ${name}:`, error);
+                    }
                 }
-            }, 1000);
+                
+                // Start ambient forest sound
+                playSound('forestAmbient', true);
+                
+                isAudioInitialized = true;
+            } catch (error) {
+                console.error("Audio initialization failed:", error);
+            }
         }
         
-        // Compact character drawing
+        // Play a sound by name
+        function playSound(name, loop = false) {
+            if (!audioContext || !soundBuffers[name]) return null;
+            
+            const source = audioContext.createBufferSource();
+            source.buffer = soundBuffers[name];
+            source.connect(audioContext.destination);
+            source.loop = loop;
+            source.start(0);
+            
+            if (loop) {
+                ambientSource = source;
+            }
+            
+            return source;
+        }
+        
+        // Character drawing with animation
         function drawCharacter(x, y, hasPartyHat = false) {
             const scale = PIXEL_SCALE;
-            const bodyY = y + 8 * scale; // Adjust base Y for more compact look
-
+            const bodyY = y + 8 * scale;
+            
             // Walking animation offsets
-            // [leftLegYOffset, rightLegYOffset, leftArmYOffset, rightArmYOffset]
             const walkCycleOffsets = [
-                [0, 0, 0, 0], // Standing (neutral pose)
-                [scale, -scale, -scale, scale], // Left leg forward, right back, arms counter
-                [0, 0, 0, 0], // Standing (neutral pose)
-                [-scale, scale, scale, -scale] // Right leg forward, left back, arms counter
+                [0, 0, 0, 0],
+                [scale, -scale, -scale, scale],
+                [0, 0, 0, 0],
+                [-scale, scale, scale, -scale]
             ];
             
             const currentOffsets = walkCycleOffsets[currentWalkFrameIndex];
             const [llY, rlY, laY, raY] = currentOffsets;
             
             // Brown skin
-            ctx.fillStyle = '#8B4513'; // Brown skin color
+            ctx.fillStyle = '#8B4513';
             ctx.fillRect(x + 2*scale, bodyY, 4*scale, 4*scale); // head
             
-            // Eye (single dot on the right side of the head)
-            ctx.fillStyle = '#000'; // Black color for the eye
-            ctx.fillRect(x + 4.25*scale, bodyY + 1*scale, 1.5*scale, 1.5*scale); // Single eye on the right
-
-            ctx.fillStyle = '#8B4513'; // Revert to skin color for arms (brown)
+            // Eye
+            ctx.fillStyle = '#000';
+            ctx.fillRect(x + 4.25*scale, bodyY + 1*scale, 1.5*scale, 1.5*scale);
+            
+            // Arms
+            ctx.fillStyle = '#8B4513';
             ctx.fillRect(x + 1*scale, bodyY + 6*scale + laY, 2*scale, 2*scale); // left arm
             ctx.fillRect(x + 5*scale, bodyY + 6*scale + raY, 2*scale, 2*scale); // right arm
             
             // Red beanie
             ctx.fillStyle = '#DC143C';
-            ctx.fillRect(x + 1*scale, bodyY - 1*scale, 6*scale, 3*scale); // beanie base
-            ctx.fillRect(x + 2*scale, bodyY - 2*scale, 4*scale, 2*scale); // beanie top
+            ctx.fillRect(x + 1*scale, bodyY - 1*scale, 6*scale, 3*scale);
+            ctx.fillRect(x + 2*scale, bodyY - 2*scale, 4*scale, 2*scale);
             
             // Red sweater
             ctx.fillStyle = '#DC143C';
-            ctx.fillRect(x + 1*scale, bodyY + 4*scale, 6*scale, 4*scale); // torso
+            ctx.fillRect(x + 1*scale, bodyY + 4*scale, 6*scale, 4*scale);
             
             // Black pants
             ctx.fillStyle = '#000000';
@@ -435,11 +425,11 @@
             
             // Party hat (only at the end)
             if (hasPartyHat) {
-                ctx.fillStyle = '#FFD700'; // Gold hat
-                ctx.fillRect(x + 3*scale, bodyY - 4*scale, 2*scale, 4*scale); // hat cone
-                ctx.fillStyle = '#FF1493'; // Pink band
+                ctx.fillStyle = '#FFD700';
+                ctx.fillRect(x + 3*scale, bodyY - 4*scale, 2*scale, 4*scale);
+                ctx.fillStyle = '#FF1493';
                 ctx.fillRect(x + 2*scale, bodyY - 1*scale, 4*scale, 1*scale);
-                ctx.fillStyle = '#FFD700'; // Gold pom pom
+                ctx.fillStyle = '#FFD700';
                 ctx.fillRect(x + 3*scale, bodyY - 5*scale, 2*scale, 1*scale);
             }
         }
@@ -448,27 +438,22 @@
         function drawFrog(x, y, hasPartyHat = false) {
             const scale = PIXEL_SCALE;
             
-            ctx.fillStyle = '#228B22'; // Green body
-            // Body
+            ctx.fillStyle = '#228B22';
             ctx.fillRect(x + 2*scale, y + 4*scale, 8*scale, 4*scale);
-            // Legs
-            ctx.fillRect(x, y + 6*scale, 2*scale, 2*scale); // Left front
-            ctx.fillRect(x + 10*scale, y + 6*scale, 2*scale, 2*scale); // Right front
-            ctx.fillRect(x + 1*scale, y + 8*scale, 2*scale, 2*scale); // Left back
-            ctx.fillRect(x + 9*scale, y + 8*scale, 2*scale, 2*scale); // Right back
-            // Head
+            ctx.fillRect(x, y + 6*scale, 2*scale, 2*scale);
+            ctx.fillRect(x + 10*scale, y + 6*scale, 2*scale, 2*scale);
+            ctx.fillRect(x + 1*scale, y + 8*scale, 2*scale, 2*scale);
+            ctx.fillRect(x + 9*scale, y + 8*scale, 2*scale, 2*scale);
             ctx.fillRect(x + 3*scale, y + 2*scale, 6*scale, 3*scale);
             
-            // Eyes
             ctx.fillStyle = '#000';
             ctx.fillRect(x + 4*scale, y + 2*scale, 1*scale, 1*scale);
             ctx.fillRect(x + 7*scale, y + 2*scale, 1*scale, 1*scale);
             
-            // Party hat
             if (hasPartyHat) {
-                ctx.fillStyle = '#FF1493'; // Pink hat
+                ctx.fillStyle = '#FF1493';
                 ctx.fillRect(x + 4*scale, y - 1*scale, 4*scale, 2*scale);
-                ctx.fillStyle = '#FFD700'; // Gold pom pom
+                ctx.fillStyle = '#FFD700';
                 ctx.fillRect(x + 5*scale, y - 2*scale, 2*scale, 1*scale);
             }
         }
@@ -477,30 +462,25 @@
         function drawCricket(x, y, hasPartyHat = false) {
             const scale = PIXEL_SCALE;
             
-            ctx.fillStyle = '#2F4F2F'; // Dark green/brown body
-            // Body segments
-            ctx.fillRect(x + 2*scale, y + 3*scale, 4*scale, 2*scale); // Main body
-            ctx.fillRect(x + 6*scale, y + 3*scale, 2*scale, 2*scale); // Abdomen
-            // Legs (thin)
-            ctx.fillRect(x + 1*scale, y + 4*scale, 1*scale, 1*scale); // Front left
-            ctx.fillRect(x + 7*scale, y + 4*scale, 1*scale, 1*scale); // Front right
-            ctx.fillRect(x + 0*scale, y + 5*scale, 1*scale, 2*scale); // Middle left
-            ctx.fillRect(x + 8*scale, y + 5*scale, 1*scale, 2*scale); // Middle right
-            ctx.fillRect(x + 1*scale, y + 7*scale, 1*scale, 3*scale); // Back left (longer)
-            ctx.fillRect(x + 7*scale, y + 7*scale, 1*scale, 3*scale); // Back right (longer)
-            // Head
+            ctx.fillStyle = '#2F4F2F';
+            ctx.fillRect(x + 2*scale, y + 3*scale, 4*scale, 2*scale);
+            ctx.fillRect(x + 6*scale, y + 3*scale, 2*scale, 2*scale);
+            ctx.fillRect(x + 1*scale, y + 4*scale, 1*scale, 1*scale);
+            ctx.fillRect(x + 7*scale, y + 4*scale, 1*scale, 1*scale);
+            ctx.fillRect(x + 0*scale, y + 5*scale, 1*scale, 2*scale);
+            ctx.fillRect(x + 8*scale, y + 5*scale, 1*scale, 2*scale);
+            ctx.fillRect(x + 1*scale, y + 7*scale, 1*scale, 3*scale);
+            ctx.fillRect(x + 7*scale, y + 7*scale, 1*scale, 3*scale);
             ctx.fillRect(x + 3*scale, y + 2*scale, 2*scale, 2*scale);
             
-            // Antennae
             ctx.fillStyle = '#000';
             ctx.fillRect(x + 3*scale, y + 1*scale, 1*scale, 1*scale);
             ctx.fillRect(x + 4*scale, y + 1*scale, 1*scale, 1*scale);
             
-            // Party hat
             if (hasPartyHat) {
-                ctx.fillStyle = '#FF1493'; // Pink hat
+                ctx.fillStyle = '#FF1493';
                 ctx.fillRect(x + 2*scale, y, 3*scale, 1*scale);
-                ctx.fillStyle = '#FFD700'; // Gold pom pom
+                ctx.fillStyle = '#FFD700';
                 ctx.fillRect(x + 3*scale, y - 1*scale, 1*scale, 1*scale);
             }
         }
@@ -509,28 +489,21 @@
         function drawDeer(x, y, hasPartyHat = false) {
             const scale = PIXEL_SCALE;
             
-            ctx.fillStyle = '#8B4513'; // Brown body
-            // Body
+            ctx.fillStyle = '#8B4513';
             ctx.fillRect(x + 4*scale, y + 6*scale, 6*scale, 8*scale);
-            // Legs
-            ctx.fillRect(x + 2*scale, y + 12*scale, 2*scale, 4*scale); // Front left
-            ctx.fillRect(x + 8*scale, y + 12*scale, 2*scale, 4*scale); // Front right
-            ctx.fillRect(x + 3*scale, y + 14*scale, 2*scale, 4*scale); // Back left
-            ctx.fillRect(x + 9*scale, y + 14*scale, 2*scale, 4*scale); // Back right
-            // Neck
+            ctx.fillRect(x + 2*scale, y + 12*scale, 2*scale, 4*scale);
+            ctx.fillRect(x + 8*scale, y + 12*scale, 2*scale, 4*scale);
+            ctx.fillRect(x + 3*scale, y + 14*scale, 2*scale, 4*scale);
+            ctx.fillRect(x + 9*scale, y + 14*scale, 2*scale, 4*scale);
             ctx.fillRect(x + 3*scale, y + 4*scale, 4*scale, 4*scale);
-            
-            // Head
             ctx.fillRect(x + 2*scale, y + 2*scale, 3*scale, 4*scale);
             
-            // Antlers
-            ctx.fillStyle = '#5D4037'; // Darker brown for antlers
+            ctx.fillStyle = '#5D4037';
             ctx.fillRect(x, y, 2*scale, 2*scale);
             ctx.fillRect(x + 5*scale, y, 2*scale, 2*scale);
-            ctx.fillRect(x - 1*scale, y + 1*scale, 1*scale, 1*scale); // Antler branch
-            ctx.fillRect(x + 6*scale, y + 1*scale, 1*scale, 1*scale); // Antler branch
+            ctx.fillRect(x - 1*scale, y + 1*scale, 1*scale, 1*scale);
+            ctx.fillRect(x + 6*scale, y + 1*scale, 1*scale, 1*scale);
             
-            // Party hat
             if (hasPartyHat) {
                 ctx.fillStyle = '#FF1493';
                 ctx.fillRect(x + 1*scale, y - 2*scale, 5*scale, 2*scale);
@@ -543,25 +516,19 @@
         function drawHorse(x, y, hasPartyHat = false) {
             const scale = PIXEL_SCALE;
             
-            ctx.fillStyle = '#A0522D'; // Sienna/brown body
-            // Body
+            ctx.fillStyle = '#A0522D';
             ctx.fillRect(x + 4*scale, y + 6*scale, 8*scale, 6*scale);
-            // Legs
-            ctx.fillRect(x + 3*scale, y + 12*scale, 2*scale, 4*scale); // Front left
-            ctx.fillRect(x + 9*scale, y + 12*scale, 2*scale, 4*scale); // Front right
-            ctx.fillRect(x + 4*scale, y + 14*scale, 2*scale, 4*scale); // Back left
-            ctx.fillRect(x + 10*scale, y + 14*scale, 2*scale, 4*scale); // Back right
-            
-            // Neck & head
+            ctx.fillRect(x + 3*scale, y + 12*scale, 2*scale, 4*scale);
+            ctx.fillRect(x + 9*scale, y + 12*scale, 2*scale, 4*scale);
+            ctx.fillRect(x + 4*scale, y + 14*scale, 2*scale, 4*scale);
+            ctx.fillRect(x + 10*scale, y + 14*scale, 2*scale, 4*scale);
             ctx.fillRect(x + 2*scale, y + 4*scale, 4*scale, 8*scale);
             ctx.fillRect(x, y + 6*scale, 2*scale, 4*scale);
             
-            // Mane
-            ctx.fillStyle = '#000'; // Black mane
+            ctx.fillStyle = '#000';
             ctx.fillRect(x + 2*scale, y + 4*scale, 2*scale, 2*scale);
-            ctx.fillRect(x + 1*scale, y + 5*scale, 1*scale, 3*scale); // Mane extends down neck
+            ctx.fillRect(x + 1*scale, y + 5*scale, 1*scale, 3*scale);
             
-            // Party hat
             if (hasPartyHat) {
                 ctx.fillStyle = '#FF1493';
                 ctx.fillRect(x, y, 2*scale, 4*scale);
@@ -574,32 +541,21 @@
         function drawBear(x, y, hasPartyHat = false) {
             const scale = PIXEL_SCALE;
             
-            ctx.fillStyle = '#654321'; // Brown bear
-            // Body
+            ctx.fillStyle = '#654321';
             ctx.fillRect(x + 3*scale, y + 6*scale, 8*scale, 8*scale);
-            
-            // Legs
-            ctx.fillRect(x + 2*scale, y + 14*scale, 2*scale, 4*scale); // Front left
-            ctx.fillRect(x + 9*scale, y + 14*scale, 2*scale, 4*scale); // Front right
-            ctx.fillRect(x + 3*scale, y + 16*scale, 2*scale, 4*scale); // Back left
-            ctx.fillRect(x + 10*scale, y + 16*scale, 2*scale, 4*scale); // Back right
-            
-            // Head
+            ctx.fillRect(x + 2*scale, y + 14*scale, 2*scale, 4*scale);
+            ctx.fillRect(x + 9*scale, y + 14*scale, 2*scale, 4*scale);
+            ctx.fillRect(x + 3*scale, y + 16*scale, 2*scale, 4*scale);
+            ctx.fillRect(x + 10*scale, y + 16*scale, 2*scale, 4*scale);
             ctx.fillRect(x + 4*scale, y + 2*scale, 6*scale, 4*scale);
-            
-            // Ears
             ctx.fillRect(x + 3*scale, y + 1*scale, 2*scale, 2*scale);
             ctx.fillRect(x + 9*scale, y + 1*scale, 2*scale, 2*scale);
             
-            // Eyes
             ctx.fillStyle = '#000';
             ctx.fillRect(x + 5*scale, y + 4*scale, 1*scale, 1*scale);
             ctx.fillRect(x + 8*scale, y + 4*scale, 1*scale, 1*scale);
-            
-            // Nose
             ctx.fillRect(x + 6*scale, y + 5*scale, 2*scale, 1*scale);
             
-            // Party hat
             if (hasPartyHat) {
                 ctx.fillStyle = '#FF1493';
                 ctx.fillRect(x + 6*scale, y, 2*scale, 2*scale);
@@ -608,9 +564,9 @@
             }
         }
         
-        // Enhanced environment rendering
+        // Environment rendering
         function drawEnvironment() {
-            const step = gameSteps[currentStep] || gameSteps[gameSteps.length - 1];
+            const step = gameSteps[Math.min(currentStep, gameSteps.length - 1)];
             
             // Sky gradient
             const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
@@ -621,40 +577,36 @@
             
             // Ground
             if (step.lakeVisible) {
-                // Lake on the right third, trail on the left two-thirds
-                ctx.fillStyle = '#8B4513'; // Trail color
+                ctx.fillStyle = '#8B4513';
                 ctx.fillRect(0, canvas.height - 100, canvas.width * 2/3, 100);
                 
-                ctx.fillStyle = '#4682B4'; // Lake color
+                ctx.fillStyle = '#4682B4';
                 ctx.fillRect(canvas.width * 2/3, canvas.height - 100, canvas.width * 1/3, 100);
             } else {
-                ctx.fillStyle = '#8B4513'; // Regular trail
+                ctx.fillStyle = '#8B4513';
                 ctx.fillRect(0, canvas.height - 100, canvas.width, 100);
             }
             
-            // Trees (progressively more foresty)
-            ctx.fillStyle = '#654321'; // Brown trunks
+            // Trees
+            ctx.fillStyle = '#654321';
             for (let i = 0; i < step.treeCount; i++) {
                 const x = (i * 40 + 30 + Math.sin(i) * 20) % (canvas.width + 40) - 20;
                 const height = 80 + Math.sin(i * 0.5) * 30;
                 const width = 15 + Math.sin(i * 0.3) * 5;
                 
-                // Skip trees that would be in the lake area
                 if (step.lakeVisible && x > canvas.width * 2/3 - 20) continue;
                 
-                // Tree trunk
                 ctx.fillRect(x, canvas.height - 100 - height, width, height);
                 
-                // Tree leaves/foliage
-                ctx.fillStyle = currentStep < 3 ? '#228B22' : '#1F4F1F'; // Darker green as evening approaches
+                ctx.fillStyle = currentStep < 3 ? '#228B22' : '#1F4F1F';
                 const foliageWidth = width * 3;
                 const foliageHeight = 40 + Math.sin(i * 0.7) * 15;
                 ctx.fillRect(x - foliageWidth/2 + width/2, canvas.height - 100 - height - foliageHeight, foliageWidth, foliageHeight);
                 
-                ctx.fillStyle = '#654321'; // Reset to brown for next trunk
+                ctx.fillStyle = '#654321';
             }
             
-            // Sun (gradually sets)
+            // Sun
             if (step.sunPosition) {
                 const sunGradient = ctx.createRadialGradient(
                     step.sunPosition.x, step.sunPosition.y, 0,
@@ -670,7 +622,7 @@
                 ctx.fill();
             }
             
-            // Moon (gradually appears)
+            // Moon
             if (step.moonPosition) {
                 const moonGradient = ctx.createRadialGradient(
                     step.moonPosition.x, step.moonPosition.y, 0, 
@@ -685,7 +637,6 @@
                 ctx.arc(step.moonPosition.x, step.moonPosition.y, 45, 0, 2 * Math.PI);
                 ctx.fill();
                 
-                // Moon craters (only visible when moon is more opaque)
                 if (step.moonPosition.opacity > 0.5) {
                     ctx.fillStyle = `rgba(230,230,250,${step.moonPosition.opacity * 0.6})`;
                     ctx.beginPath();
@@ -701,64 +652,42 @@
             }
             
             // Lake with moon reflection
-            if (step.lakeVisible) {
-                // Lake surface
-                ctx.fillStyle = '#4682B4';
-                ctx.fillRect(canvas.width * 2/3, canvas.height - 100, canvas.width * 1/3, 100);
+            if (step.lakeVisible && step.moonPosition && step.moonPosition.opacity > 0.8) {
+                const reflectionX = canvas.width * 2/3 + 50;
+                const reflectionY = canvas.height - 60;
                 
-                // Lake edge/shore
-                ctx.fillStyle = '#8B4513';
-                ctx.fillRect(canvas.width * 2/3 - 10, canvas.height - 105, 10, 105);
+                ctx.fillStyle = 'rgba(255,250,240,0.7)';
+                ctx.fillRect(reflectionX, reflectionY, 40, 35);
                 
-                // Moon reflection (enhanced)
-                if (step.moonPosition && step.moonPosition.opacity > 0.8) {
-                    const reflectionX = canvas.width * 2/3 + 50;
-                    const reflectionY = canvas.height - 60;
-                    
-                    // Main reflection
-                    ctx.fillStyle = 'rgba(255,250,240,0.7)';
-                    ctx.fillRect(reflectionX, reflectionY, 40, 35);
-                    
-                    // Brighter center
-                    ctx.fillStyle = 'rgba(255,250,240,0.9)';
-                    ctx.fillRect(reflectionX + 5, reflectionY + 5, 30, 25);
-                    
-                    // Shimmer effect
-                    for (let i = 0; i < 8; i++) {
-                        const shimmerOpacity = 0.3 + Math.sin(Date.now() * 0.01 + i) * 0.2;
-                        ctx.fillStyle = `rgba(255,250,240,${shimmerOpacity})`;
-                        const shimmerX = reflectionX + i * 5;
-                        const shimmerY = reflectionY + Math.sin(Date.now() * 0.008 + i) * 4;
-                        ctx.fillRect(shimmerX, shimmerY, 5, 3);
-                    }
-                    
-                    // Ripple effects
-                    for (let i = 0; i < 3; i++) {
-                        const rippleOpacity = 0.1 + Math.sin(Date.now() * 0.005 + i * 2) * 0.05;
-                        ctx.fillStyle = `rgba(255,250,240,${rippleOpacity})`;
-                        const rippleY = reflectionY + 40 + i * 8;
-                        ctx.fillRect(reflectionX - 10, rippleY, 60, 2);
-                    }
+                ctx.fillStyle = 'rgba(255,250,240,0.9)';
+                ctx.fillRect(reflectionX + 5, reflectionY + 5, 30, 25);
+                
+                for (let i = 0; i < 8; i++) {
+                    const shimmerOpacity = 0.3 + Math.sin(Date.now() * 0.01 + i) * 0.2;
+                    ctx.fillStyle = `rgba(255,250,240,${shimmerOpacity})`;
+                    const shimmerX = reflectionX + i * 5;
+                    const shimmerY = reflectionY + Math.sin(Date.now() * 0.008 + i) * 4;
+                    ctx.fillRect(shimmerX, shimmerY, 5, 3);
+                }
+                
+                for (let i = 0; i < 3; i++) {
+                    const rippleOpacity = 0.1 + Math.sin(Date.now() * 0.005 + i * 2) * 0.05;
+                    ctx.fillStyle = `rgba(255,250,240,${rippleOpacity})`;
+                    const rippleY = reflectionY + 40 + i * 8;
+                    ctx.fillRect(reflectionX - 10, rippleY, 60, 2);
                 }
             }
         }
         
+        // Main render function
         function render() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawEnvironment();
             
-            const step = gameSteps[currentStep] || gameSteps[gameSteps.length - 1];
-            
-            // Character walking
+            const step = gameSteps[Math.min(currentStep, gameSteps.length - 1)];
             drawCharacter(currentCharacterX, canvas.height - 150, step.showPartyAnimals);
             
-            // Party animals at the end, moved to the left
             if (step.showPartyAnimals) {
-                // Ensure animals are distinct from ground/trees
-                // By making them slightly brighter and adding a subtle outline if needed,
-                // and ensuring their colors contrast with the background.
-                // Their current colors (green, dark green, brown) already provide some distinction.
-                
                 drawFrog(50, canvas.height - 90, true);
                 drawCricket(150, canvas.height - 85, true);
                 drawDeer(250, canvas.height - 100, true);
@@ -767,6 +696,7 @@
             }
         }
         
+        // Character movement
         function moveCharacter() {
             if (Math.abs(currentCharacterX - targetCharacterX) > characterSpeed) {
                 if (currentCharacterX < targetCharacterX) {
@@ -776,20 +706,20 @@
                 }
                 isMoving = true;
                 
-                // Update walk animation frame counter
                 currentWalkAnimationFrame++;
                 if (currentWalkAnimationFrame % walkFrameAnimationRate === 0) {
-                    currentWalkFrameIndex = (currentWalkFrameIndex + 1) % 4; // Assuming 4 frames in walkCycleOffsets
+                    currentWalkFrameIndex = (currentWalkFrameIndex + 1) % 4;
                 }
                 
                 requestAnimationFrame(moveCharacter);
             } else {
                 isMoving = false;
                 currentWalkAnimationFrame = 0;
-                currentWalkFrameIndex = 0; // Reset to standing when stopped
+                currentWalkFrameIndex = 0;
             }
         }
         
+        // Progress to next step
         function nextStep() {
             if (!isAudioInitialized) {
                 initAudio();
@@ -799,8 +729,8 @@
                 const step = gameSteps[currentStep];
                 message.textContent = step.message;
                 
-                // Play environment-specific sound
-                step.environmentSound();
+                // Play environment sound
+                playSound(step.environmentSound);
                 
                 if (currentStep === gameSteps.length - 1) {
                     button.textContent = "🎁 Discover the Surprise";
@@ -808,20 +738,17 @@
                     button.textContent = "Continue Journey →";
                 }
                 
-                // Set target position for character
                 targetCharacterX = step.characterX;
                 
-                // Start character movement animation
                 if (!isMoving) {
                     moveCharacter();
                 }
                 
                 currentStep++;
             } else {
-                // Show birthday card
-				if (ambientSource) {
-                ambientSource.stop();
-				}
+                if (ambientSource) {
+                    ambientSource.stop();
+                }
                 document.getElementById('ui').style.display = 'none';
                 birthdayCard.style.display = 'block';
             }
@@ -830,7 +757,7 @@
         // Event listeners
         button.addEventListener('click', nextStep);
         
-        // Animation loop for smooth effects
+        // Animation loop
         function animate() {
             render();
             requestAnimationFrame(animate);
